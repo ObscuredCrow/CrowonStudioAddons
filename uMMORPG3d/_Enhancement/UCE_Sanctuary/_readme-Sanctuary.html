@@ -1,0 +1,119 @@
+<style>
+	@import "https://fonts.googleapis.com/css?family=Open Sans:regular,semibold,italic,italicsemibold|Inconsolata&amp;v2";
+
+	body {
+		font-family: "Open Sans";
+		margin: 6em 2em 2em 2em;
+	}
+
+		body:before {
+			content: '';
+			position: fixed;
+			top: 2%;
+			right: 3%;
+			height: 256px;
+			width: 256px;
+			background: url(https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowonStudio-Top-1024x1024.png) no-repeat 100% 100%;
+			background-size: contain;
+			z-index: 10;
+			opacity: 0.5;
+		}
+
+	h1, h2, h3, h4 {
+		font-weight: 600;
+	}
+
+	h1 {
+		position: fixed;
+		background: -webkit-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -moz-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -ms-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -o-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		width: 100%;
+		height: 80px;
+		padding: 10px 10px 10px 1em;
+		left: 0;
+		top: 0;
+		margin: 0;
+	}
+
+		h1 img {
+			height: 30px;
+			vertical-align: middle;
+			margin-bottom: 8px;
+		}
+
+	a {
+		color: navy;
+	}
+
+	pre {
+		background: #eee;
+		margin-left: 2em;
+		padding: 5px;
+		border-left: 3px solid #ccc;
+	}
+</style>
+
+<h1>
+	<a href="https://discord.gg/YkMbDHs" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2021/01/discordlogo.png" style="width:48px; height:48px"></a>
+	<a href="https://crowon-studio.com" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowMoon.png" style="width:48px; height:48px"></a>
+	Sanctuary
+</h1>
+
+<table class="wp-block-table is-style-stripes">
+	<tbody>
+		<tr>
+			<td><strong>Version:</strong></td>
+			<td>2021.100</td>
+			<td><strong>Requirements:</strong></td>
+			<td>uMMORPG3d</td>
+			<td><strong>Script Define:</strong></td>
+			<td>No</td>
+		</tr>
+		<tr>
+			<td><strong>Core Changes:</strong></td>
+			<td>No</td>
+			<td><strong>Tutorial Video:</strong></td>
+			<td>No</td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Description</h2>
+<p>
+	This addon allows you to add one or more Sanctuaries to your scenes. A Sanctuary is a area that allows your players to recover
+	while being offline (like a Inn, Camp or Restplace).
+	<br /><br />
+	After your players logged-out, while inside a Sanctuary, they will recover their stats and even gain stats the longer
+	they stay offline. You can adjust the recovery and gain rates (as well as maximums) in the Inspector settings of the
+	Sanctuary, once you placed it in your scene.
+</p>
+
+<hr />
+
+<h2>Usage</h2>
+<ol>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Add all Prefabs from <strong>Prefabs [Drag to Scene]</strong> to your Scene.</li>
+</ol>
+
+<hr />
+
+<h2>Video</h2>
+<p><iframe width="560" height="315" src="https://www.youtube.com/embed/bjBOWVGSF4Y" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
+
+<hr />
+
+<h2>Extras</h2>
+<ul>
+	<li>Logging out inside a Sanctuary allows your players to gain different effects and bonuses.</li>
+	<li>You can mix all attributes as you wish, so a Sanctuary can provide some or all of the rates stated above. You can also have several Sanctuaries in your scene, each one with individual settings (like a Inn where player recover Health/Mana while being offline or a Goldmine where players earn gold while being offline etc.).</li>
+	<li>Simply set a rating to 0 to disable it.</li>
+	<li>Each rating refers to the number of seconds that must pass in order to grant the player +1 of the given stat (eg. SecondsPerHealth = 60 means the player recovers 1 health per 60 seconds while being offline).</li>
+</ul>
+
+<hr />
+
+<p>Crowon Studio&copy;2018 - for personal and commercial game projects, not for sharing or re-sale</p>

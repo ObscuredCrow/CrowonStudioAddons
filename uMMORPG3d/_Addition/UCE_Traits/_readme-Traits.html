@@ -1,0 +1,140 @@
+<style>
+	@import "https://fonts.googleapis.com/css?family=Open Sans:regular,semibold,italic,italicsemibold|Inconsolata&amp;v2";
+
+	body {
+		font-family: "Open Sans";
+		margin: 6em 2em 2em 2em;
+	}
+
+		body:before {
+			content: '';
+			position: fixed;
+			top: 2%;
+			right: 3%;
+			height: 256px;
+			width: 256px;
+			background: url(https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowonStudio-Top-1024x1024.png) no-repeat 100% 100%;
+			background-size: contain;
+			z-index: 10;
+			opacity: 0.5;
+		}
+
+	h1, h2, h3, h4 {
+		font-weight: 600;
+	}
+
+	h1 {
+		position: fixed;
+		background: -webkit-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -moz-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -ms-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -o-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		width: 100%;
+		height: 80px;
+		padding: 10px 10px 10px 1em;
+		left: 0;
+		top: 0;
+		margin: 0;
+	}
+
+		h1 img {
+			height: 30px;
+			vertical-align: middle;
+			margin-bottom: 8px;
+		}
+
+	a {
+		color: navy;
+	}
+
+	pre {
+		background: #eee;
+		margin-left: 2em;
+		padding: 5px;
+		border-left: 3px solid #ccc;
+	}
+</style>
+
+<h1>
+	<a href="https://discord.gg/YkMbDHs" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2021/01/discordlogo.png" style="width:48px; height:48px"></a>
+	<a href="https://crowon-studio.com" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowMoon.png" style="width:48px; height:48px"></a>
+	Traits
+</h1>
+
+<table class="wp-block-table is-style-stripes">
+	<tbody>
+		<tr>
+			<td><strong>Version:</strong></td>
+			<td>2021.100</td>
+			<td><strong>Requirements:</strong></td>
+			<td>uMMORPG3d</td>
+			<td><strong>Script Define:</strong></td>
+			<td>_CSTRAITS</td>
+		</tr>
+		<tr>
+			<td><strong>Core Changes:</strong></td>
+			<td>No</td>
+			<td><strong>Tutorial Video:</strong></td>
+			<td>No</td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Description</h2>
+<p>
+	<strong>Required: Attributes and Character Creation</strong>
+	<br /><br />
+	Adds customizeable character traits to players (right now, all player prefabs are the same). Traits can be 
+	assigned during character creation. Traits can modifiy almost everything from attributes to stats, skills, 
+	resistances etc.
+</p>
+
+<hr />
+
+<h2>Core Changes</h2>
+<p>
+	Some add-ons require changes to the core framework in order to function. This add-on requires the following change(s):
+</p>
+
+<ol>
+	<li>
+		None.
+	</li>
+</ol>
+
+<hr />
+
+<h2>Installation</h2>
+<ol>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Move all Content from <strong>Resources [Move to Resources]</strong> to your Resources folder.</li>
+</ol>
+
+<hr />
+
+<h2>Screenshots</h2>
+<p>None.</p>
+<!--<p><img class="alignnone size-full wp-image-3418" src="" alt="" width="560" height="315" /></p>-->
+
+<hr />
+
+<h2>Video</h2>
+<p>None.</p>
+<!--<p><iframe width="560" height="315" src="" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>-->
+
+<hr />
+
+<h2>Extras</h2>
+<ul>
+	<li>Edit the new "UCE Traits" section on your player prefabs and assign a number of trait points to them.</li>
+	<li>Traits are only available during character creation and cannot be altered afterwards anymore (at least not yet).</li>
+	<li>Traits allow your players to modify almost every aspect on their characters (stats that is, not visual aspects).</li>
+	<li>Carefully edit the number of trait points each player prefab has available, as well as the trait cost of each trait.</li>
+	<li>Assign a unique group ID to traits, to limit your players to just one trait of that group.</li>
+	<li>Check the "Allowed Classes" section on the Trait template, to limit a trait to a certain class.</li>
+</ul>
+
+<hr />
+
+<p>Crowon Studio&copy;2018 - for personal and commercial game projects, not for sharing or re-sale</p>

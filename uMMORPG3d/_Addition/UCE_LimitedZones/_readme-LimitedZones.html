@@ -1,0 +1,227 @@
+<style>
+	@import "https://fonts.googleapis.com/css?family=Open Sans:regular,semibold,italic,italicsemibold|Inconsolata&amp;v2";
+
+	body {
+		font-family: "Open Sans";
+		margin: 6em 2em 2em 2em;
+	}
+
+		body:before {
+			content: '';
+			position: fixed;
+			top: 2%;
+			right: 3%;
+			height: 256px;
+			width: 256px;
+			background: url(https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowonStudio-Top-1024x1024.png) no-repeat 100% 100%;
+			background-size: contain;
+			z-index: 10;
+			opacity: 0.5;
+		}
+
+	h1, h2, h3, h4 {
+		font-weight: 600;
+	}
+
+	h1 {
+		position: fixed;
+		background: -webkit-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -moz-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -ms-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -o-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		width: 100%;
+		height: 80px;
+		padding: 10px 10px 10px 1em;
+		left: 0;
+		top: 0;
+		margin: 0;
+	}
+
+		h1 img {
+			height: 30px;
+			vertical-align: middle;
+			margin-bottom: 8px;
+		}
+
+	a {
+		color: navy;
+	}
+
+	pre {
+		background: #eee;
+		margin-left: 2em;
+		padding: 5px;
+		border-left: 3px solid #ccc;
+	}
+</style>
+
+<h1>
+	<a href="https://discord.gg/YkMbDHs" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2021/01/discordlogo.png" style="width:48px; height:48px"></a>
+	<a href="https://crowon-studio.com" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowMoon.png" style="width:48px; height:48px"></a>
+	Limited Zones
+</h1>
+
+<table class="wp-block-table is-style-stripes">
+	<tbody>
+		<tr>
+			<td><strong>Version:</strong></td>
+			<td>2021.100</td>
+			<td><strong>Requirements:</strong></td>
+			<td>uMMORPG3d</td>
+			<td><strong>Script Define:</strong></td>
+			<td>_CSLIMITEDZONES</td>
+		</tr>
+		<tr>
+			<td><strong>Core Changes:</strong></td>
+			<td>No</td>
+			<td><strong>Tutorial Video:</strong></td>
+			<td>No</td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Description</h2>
+<p>
+	This utility AddOn is required by all other UCE AddOns, as it contains several shared functions and UI elements.
+	Most notably are the universal "CastBarUI", "InfoBoxUI" and a universal "PopupUI". Those UI elements also come
+	with options that can be edited via the Inspector. Besides that, this AddOn adds a lot of new functions to the
+	core asset, those functions are required in order for the UCE AddOns to work as expected.
+</p>
+
+<hr />
+
+<h2>Core Changes</h2>
+<p>
+	Some add-ons require changes to the core framework in order to function. This add-on requires the following change(s):
+</p>
+
+<ol>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>EquipmentItem.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>public class EquipmentItem : UsableItem</code></pre>
+			<p>Modify to match:</p>
+			<pre><code>public <span style="color: #0000ff;">partial </span>class EquipmentItem : UsableItem</code></pre>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>UsableItem.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>public abstract class UsableItem : ScriptableItem</code></pre>
+			<p>Modify to match:</p>
+			<pre><code>public abstract <span style="color: #0000ff;">partial </span>class UsableItem : ScriptableItem</code></pre>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>WeaponItem.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>public class WeaponItem : EquipmentItem</code></pre>
+			<p>Modify to match:</p>
+			<pre><code>public <span style="color: #0000ff;">partial </span>class WeaponItem : EquipmentItem</code></pre>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>BonusSkill.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>public abstract class BonusSkill : ScriptableSkill</code></pre>
+			<p>Modify to match:</p>
+			<pre><code>public abstract <span style="color: #0000ff;">partial </span>class BonusSkill : ScriptableSkill</code></pre>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>BuffSkill.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>public abstract class BuffSkill : BonusSkill</code></pre>
+			<p>Modify to match:</p>
+			<pre><code>public abstract <span style="color: #0000ff;">partial </span>class BuffSkill : BonusSkill</code></pre>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>DamageSkill.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>public abstract class DamageSkill : ScriptableSkill</code></pre>
+			<p>Modify to match:</p>
+			<pre><code>public abstract <span style="color: #0000ff;">partial </span>class DamageSkill : ScriptableSkill</code></pre>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong></span>Open the following script <strong>Player.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>
+void OnEquipmentChanged(SyncListItemSlot.Operation op, int index)
+{
+	// update the model
+	RefreshLocation(index);
+}
+</code></pre>
+			<p>Modify to match:</p>
+			<pre><code>
+void OnEquipmentChanged(SyncListItemSlot.Operation op, int index, ItemSlot slot)
+{
+	// update the model
+	RefreshLocation(index);
+
+			<span style="color: #0000ff;">Utils.InvokeMany(typeof(Player), this, "OnEquipmentChanged_");</span>
+}
+			</code></pre>
+		</details>
+	</li>
+</ol>
+
+<hr />
+
+<h2>Installation</h2>
+<ol>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Add all Prefabs from <strong>Prefabs [Drag to Canvas]</strong> to your Canvas.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Add all Scripts from <strong>Scripts [Attach to Players]</strong> to all Player Prefabs.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Move all Content from <strong>Resources [Move to Resources]</strong> to your Resources folder.</li>
+	<li><span style="color: #000080;"><strong>[Optional]</strong></span> Add all Prefabs from <strong>Prefabs [Optional - Drag to Scene]</strong> to your Scene.</li>
+</ol>
+
+<hr />
+
+<h2>Screenshots</h2>
+<p>None.</p>
+<!--<p><img class="alignnone size-full wp-image-3418" src="" alt="" width="560" height="315" /></p>-->
+
+<hr />
+
+<h2>Video</h2>
+<p>None.</p>
+<!--<p><iframe width="560" height="315" src="" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>-->
+
+<hr />
+
+<h2>Extras</h2>
+<ul>
+	<li>When updating from an older version, be sure to delete the <strong>UCE_Tools.Buff.cs</strong> - as this file is now obsolete and not used anymore!</li>
+	<li>When updating from an older version, be sure to delete the <strong>UCE_TemplateConfiguration.cs</strong> - in the Templates Folder, as this file is now obsolete and not used anymore!</li>
+	<li>Copyright Notice: Contains several free (MIT) plugins: <strong>"Paul's mySQL AddOn", "Suriyun Editor Tools", "iTween" and "LeanTween"</strong> all available from the asset store (free) and elsewhere on the web. If you imported one or more of those free assets into your project already, delete the obsolete copy to prevent errors.</li>
+</ul>
+
+<hr />
+
+<p>Crowon Studio&copy;2018 - for personal and commercial game projects, not for sharing or re-sale</p>

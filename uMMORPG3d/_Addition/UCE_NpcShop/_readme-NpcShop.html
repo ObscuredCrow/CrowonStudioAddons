@@ -1,0 +1,138 @@
+<style>
+	@import "https://fonts.googleapis.com/css?family=Open Sans:regular,semibold,italic,italicsemibold|Inconsolata&amp;v2";
+
+	body {
+		font-family: "Open Sans";
+		margin: 6em 2em 2em 2em;
+	}
+
+		body:before {
+			content: '';
+			position: fixed;
+			top: 2%;
+			right: 3%;
+			height: 256px;
+			width: 256px;
+			background: url(https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowonStudio-Top-1024x1024.png) no-repeat 100% 100%;
+			background-size: contain;
+			z-index: 10;
+			opacity: 0.5;
+		}
+
+	h1, h2, h3, h4 {
+		font-weight: 600;
+	}
+
+	h1 {
+		position: fixed;
+		background: -webkit-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -moz-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -ms-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -o-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		width: 100%;
+		height: 80px;
+		padding: 10px 10px 10px 1em;
+		left: 0;
+		top: 0;
+		margin: 0;
+	}
+
+		h1 img {
+			height: 30px;
+			vertical-align: middle;
+			margin-bottom: 8px;
+		}
+
+	a {
+		color: navy;
+	}
+
+	pre {
+		background: #eee;
+		margin-left: 2em;
+		padding: 5px;
+		border-left: 3px solid #ccc;
+	}
+</style>
+
+<h1>
+	<a href="https://discord.gg/YkMbDHs" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2021/01/discordlogo.png" style="width:48px; height:48px"></a>
+	<a href="https://crowon-studio.com" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowMoon.png" style="width:48px; height:48px"></a>
+	Npc Shop
+</h1>
+
+<table class="wp-block-table is-style-stripes">
+	<tbody>
+		<tr>
+			<td><strong>Version:</strong></td>
+			<td>2021.100</td>
+			<td><strong>Requirements:</strong></td>
+			<td>uMMORPG3d</td>
+			<td><strong>Script Define:</strong></td>
+			<td>_CSNPCSHOP</td>
+		</tr>
+		<tr>
+			<td><strong>Core Changes:</strong></td>
+			<td>No</td>
+			<td><strong>Tutorial Video:</strong></td>
+			<td>No</td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Description</h2>
+<p>
+	The Npc Trading window now looks like the Item mall. Allows category filters for items. Selling also changed: You 
+	can simply switch buy/sell mode and the window content/action updates accordingly. Simple but effective!
+</p>
+
+<hr />
+
+<h2>Core Changes</h2>
+<p>
+	Some add-ons require changes to the core framework in order to function. This add-on requires the following change(s):
+</p>
+
+<ol>
+	<li>
+		None.
+	</li>
+</ol>
+
+<hr />
+
+<h2>Installation</h2>
+<ol>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Add all Prefabs from <strong>Prefabs [Drag to Canvas]</strong> to your Canvas.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Disable your old <strong>NpcTrading</strong> on your Canvas.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Replace your old NpcTradingPanel link with <strong>NpcShopPanel</strong> on your NpcDialogue.</li>
+</ol>
+
+<hr />
+
+<h2>Screenshots</h2>
+<p>None.</p>
+<!--<p><img class="alignnone size-full wp-image-3418" src="" alt="" width="560" height="315" /></p>-->
+
+<hr />
+
+<h2>Video</h2>
+<p>None.</p>
+<!--<p><iframe width="560" height="315" src="" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>-->
+
+<hr />
+
+<h2>Extras</h2>
+<ul>
+	<li>Make sure to add at least one item to the default <strong>saleItems</strong> list or the AddOn won't work properly (core issue).</li>
+	<li>If you dont want to use shop categories, you still have to create one category and leave it empty.</li>
+	<li>Also supports selling of items, there is a button that allows the player to switch between buy and sell mode.</li>
+	<li>The items available for sale can change when the Npc changes its level (it uses uMMORPGs default saleItems list by default), there is an extra "levelled Sale Item List" for that. For example a level 3 shopkeeper can offer different items, you simply have to create a levelled sales items list with at least 3 entries.</li>
+	<li>You can also scale the shop inventory by the level of the player, using the levelSaleItems list and ticking the checkbox. It will calculate a ratio from maxPlayer to currentPlayer level and choose the highest available levelSalesItems index.</li>
+</ul>
+
+<hr />
+
+<p>Crowon Studio&copy;2018 - for personal and commercial game projects, not for sharing or re-sale</p>

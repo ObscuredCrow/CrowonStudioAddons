@@ -1,0 +1,358 @@
+<style>
+	@import "https://fonts.googleapis.com/css?family=Open Sans:regular,semibold,italic,italicsemibold|Inconsolata&amp;v2";
+
+	body {
+		font-family: "Open Sans";
+		margin: 6em 2em 2em 2em;
+	}
+
+		body:before {
+			content: '';
+			position: fixed;
+			top: 2%;
+			right: 3%;
+			height: 256px;
+			width: 256px;
+			background: url(https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowonStudio-Top-1024x1024.png) no-repeat 100% 100%;
+			background-size: contain;
+			z-index: 10;
+			opacity: 0.5;
+		}
+
+	h1, h2, h3, h4 {
+		font-weight: 600;
+	}
+
+	h1 {
+		position: fixed;
+		background: -webkit-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -moz-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -ms-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -o-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		width: 100%;
+		height: 80px;
+		padding: 10px 10px 10px 1em;
+		left: 0;
+		top: 0;
+		margin: 0;
+	}
+
+		h1 img {
+			height: 30px;
+			vertical-align: middle;
+			margin-bottom: 8px;
+		}
+
+	a {
+		color: navy;
+	}
+
+	pre {
+		background: #eee;
+		margin-left: 2em;
+		padding: 5px;
+		border-left: 3px solid #ccc;
+	}
+</style>
+
+<h1>
+	<a href="https://discord.gg/YkMbDHs" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2021/01/discordlogo.png" style="width:48px; height:48px"></a>
+	<a href="https://crowon-studio.com" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowMoon.png" style="width:48px; height:48px"></a>
+	Attributes
+</h1>
+
+<table class="wp-block-table is-style-stripes">
+	<tbody>
+		<tr>
+			<td><strong>Version:</strong></td>
+			<td>2021.100</td>
+			<td><strong>Requirements:</strong></td>
+			<td>uMMORPG3d</td>
+			<td><strong>Script Define:</strong></td>
+			<td>_CSATTRIBUTES</td>
+		</tr>
+		<tr>
+			<td><strong>Core Changes:</strong></td>
+			<td>Yes</td>
+			<td><strong>Tutorial Video:</strong></td>
+			<td>No</td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Description</h2>
+<p>
+	Adds new configurable attributes such as: Accuracy, Resistance, Critical, Block, Drain Health, Drain Mana, Reflect Damage, Defense Break, Block Break, Critical Evasion.
+</p>
+
+<hr />
+
+<h2>Core Changes</h2>
+<p>
+	Some add-ons require changes to the core framework in order to function. This add-on requires the following change(s):
+</p>
+
+<ol>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>Entity.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>
+// deal damage at another entity
+// (can be overwritten for players etc. that need custom functionality)
+[Server]
+public virtual void DealDamageAt(Entity entity, int amount, float stunChance=0, float stunTime=0)
+{
+	int damageDealt = 0;
+	DamageType damageType = DamageType.Normal;
+
+	// don't deal any damage if entity is invincible
+	if (!entity.invincible)
+	{
+		// block? (we use < not <= so that block rate 0 never blocks)
+		if (UnityEngine.Random.value < entity.blockChance)
+		{
+			damageType = DamageType.Block;
+		}
+		// deal damage
+		else
+		{
+			// subtract defense (but leave at least 1 damage, otherwise
+			// it may be frustrating for weaker players)
+			damageDealt = Mathf.Max(amount - entity.defense, 1);
+
+			// critical hit?
+			if (UnityEngine.Random.value < criticalChance)
+			{
+				damageDealt *= 2;
+				damageType = DamageType.Crit;
+			}
+
+			// deal the damage
+			entity.health -= damageDealt;
+
+			// stun?
+			if (UnityEngine.Random.value < stunChance)
+			{
+				// dont allow a short stun to overwrite a long stun
+				// => if a player is hit with a 10s stun, immediately
+				//    followed by a 1s stun, we don't want it to end in 1s!
+				double newStunEndTime = NetworkTime.time + stunTime;
+				entity.stunTimeEnd = Math.Max(newStunEndTime, stunTimeEnd);
+			}
+		}
+	}
+
+	// let's make sure to pull aggro in any case so that archers
+	// are still attacked if they are outside of the aggro range
+	entity.OnAggro(this);
+
+	// show effects on clients
+	entity.RpcOnDamageReceived(damageDealt, damageType);
+
+	// reset last combat time for both
+	lastCombatTime = NetworkTime.time;
+	entity.lastCombatTime = NetworkTime.time;
+
+	// addon system hooks
+	Utils.InvokeMany(typeof(Entity), this, "DealDamageAt_", entity, amount);
+}
+			</code></pre>
+			<p>Comment out or Delete it.</p>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>Player.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>
+// health
+public override int healthMax
+{
+	get
+	{
+		// calculate equipment bonus
+		int equipmentBonus = (from slot in equipment
+			where slot.amount > 0
+			select ((EquipmentItem)slot.item.data).healthBonus).Sum();
+
+		// calculate strength bonus (1 strength means 1% of hpMax bonus)
+		int attributeBonus = Convert.ToInt32(_healthMax.Get(level) * (strength * 0.01f));
+
+		// base (health + buff) + equip + attributes
+		return base.healthMax + equipmentBonus + attributeBonus;
+	}
+}
+			</code></pre>
+			<p>Comment out or Delete it.</p>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>Player.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>
+// mana
+public override int manaMax
+{
+	get
+	{
+		// calculate equipment bonus
+		int equipmentBonus = (from slot in equipment
+			where slot.amount > 0
+			select ((EquipmentItem)slot.item.data).manaBonus).Sum();
+
+		// calculate intelligence bonus (1 intelligence means 1% of hpMax bonus)
+		int attributeBonus = Convert.ToInt32(_manaMax.Get(level) * (intelligence * 0.01f));
+
+		// base (mana + buff) + equip + attributes
+		return base.manaMax + equipmentBonus + attributeBonus;
+	}
+}
+			</code></pre>
+			<p>Comment out or Delete it.</p>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>Player.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>
+// damage
+public override int damage
+{
+	get
+	{
+		// calculate equipment bonus
+		int equipmentBonus = (from slot in equipment
+			where slot.amount > 0
+			select ((EquipmentItem)slot.item.data).damageBonus).Sum();
+
+		// return base (damage + buff) + equip
+		return base.damage + equipmentBonus;
+	}
+}
+			</code></pre>
+			<p>Comment out or Delete it.</p>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>Player.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>
+// defense
+public override int defense
+{
+	get
+	{
+		// calculate equipment bonus
+		int equipmentBonus = (from slot in equipment
+			where slot.amount > 0
+			select ((EquipmentItem)slot.item.data).defenseBonus).Sum();
+
+		// return base (defense + buff) + equip
+		return base.defense + equipmentBonus;
+	}
+}
+			</code></pre>
+			<p>Comment out or Delete it.</p>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>Player.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>
+// block
+public override float blockChance
+{
+	get
+	{
+		// calculate equipment bonus
+		float equipmentBonus = (from slot in equipment
+			where slot.amount > 0
+			select ((EquipmentItem)slot.item.data).blockChanceBonus).Sum();
+
+		// return base (blockChance + buff) + equip
+		return base.blockChance + equipmentBonus;
+	}
+}
+			</code></pre>
+			<p>Comment out or Delete it.</p>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong></span>Open the following script <strong>Player.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>
+// crit
+public override float criticalChance
+{
+	get
+	{
+		// calculate equipment bonus
+		float equipmentBonus = (from slot in equipment
+			where slot.amount > 0
+			select ((EquipmentItem)slot.item.data).criticalChanceBonus).Sum();
+
+		// return base (criticalChance + buff) + equip
+		return base.criticalChance + equipmentBonus;
+	}
+}
+			</code></pre>
+			<p>Comment out or Delete it.</p>
+		</details>
+	</li>
+</ol>
+
+<hr />
+
+<h2>Installation</h2>
+<ol>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Move <strong>UCE Attributes [Drag to Resources]</strong> to your Resources folder.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Link the <strong>Attributes</strong> from the folder you moved to your Player under UCE Attributes.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Add all Prfabs from <strong>Prefabs [Drag to Canvas]</strong> to your Canvas.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Deactivate or Delete the original <strong>CharacterInfo</strong> located under your Canvas.</li>
+</ol>
+
+<hr />
+
+<h2>Screenshots</h2>
+<p>None.</p>
+<!--<p><img class="alignnone size-full wp-image-3418" src="" alt="" width="560" height="315" /></p>-->
+
+<hr />
+
+<h2>Video</h2>
+<p>None.</p>
+<!--<p><iframe width="560" height="315" src="" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>-->
+
+<hr />
+
+<h2>Extras</h2>
+<ul>
+	<li>Delete your database and create new characters after setup as this fully replaces the built-in attribute system.</li>
+	<li>If your Critical Hits deal no damage anymore, make sure to increase the Critical Factor on the Entity as its 0 by default.</li>
+</ul>
+
+<hr />
+
+<p>Crowon Studio&copy;2018 - for personal and commercial game projects, not for sharing or re-sale</p>

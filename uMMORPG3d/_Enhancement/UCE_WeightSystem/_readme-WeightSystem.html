@@ -1,0 +1,126 @@
+<style>
+	@import "https://fonts.googleapis.com/css?family=Open Sans:regular,semibold,italic,italicsemibold|Inconsolata&amp;v2";
+
+	body {
+		font-family: "Open Sans";
+		margin: 6em 2em 2em 2em;
+	}
+
+		body:before {
+			content: '';
+			position: fixed;
+			top: 2%;
+			right: 3%;
+			height: 256px;
+			width: 256px;
+			background: url(https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowonStudio-Top-1024x1024.png) no-repeat 100% 100%;
+			background-size: contain;
+			z-index: 10;
+			opacity: 0.5;
+		}
+
+	h1, h2, h3, h4 {
+		font-weight: 600;
+	}
+
+	h1 {
+		position: fixed;
+		background: -webkit-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -moz-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -ms-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -o-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		width: 100%;
+		height: 80px;
+		padding: 10px 10px 10px 1em;
+		left: 0;
+		top: 0;
+		margin: 0;
+	}
+
+		h1 img {
+			height: 30px;
+			vertical-align: middle;
+			margin-bottom: 8px;
+		}
+
+	a {
+		color: navy;
+	}
+
+	pre {
+		background: #eee;
+		margin-left: 2em;
+		padding: 5px;
+		border-left: 3px solid #ccc;
+	}
+</style>
+
+<h1>
+	<a href="https://discord.gg/YkMbDHs" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2021/01/discordlogo.png" style="width:48px; height:48px"></a>
+	<a href="https://crowon-studio.com" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowMoon.png" style="width:48px; height:48px"></a>
+	Weight System
+</h1>
+
+<table class="wp-block-table is-style-stripes">
+	<tbody>
+		<tr>
+			<td><strong>Version:</strong></td>
+			<td>2021.100</td>
+			<td><strong>Requirements:</strong></td>
+			<td>uMMORPG3d</td>
+			<td><strong>Script Define:</strong></td>
+			<td>No</td>
+		</tr>
+		<tr>
+			<td><strong>Core Changes:</strong></td>
+			<td>No</td>
+			<td><strong>Tutorial Video:</strong></td>
+			<td>No</td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Description</h2>
+<p>
+	This weight system adds a weight to every item in the game. Players are able to carry a maximum weight according to one
+	Attribute. You can then specify a "burdened" buff that kicks in, when the players inventory total weight reaches a certain
+	threshold. The burdened buff can feature several levels to simulate levels of burden and is refreshed or removed
+	automatically every second.
+</p>
+
+<hr />
+
+<h2>Installation</h2>
+<ol>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Move all Content from <strong>Resources [Move to Resources]</strong> to your Resources folder.</li>
+</ol>
+
+<hr />
+
+<h2>Usage</h2>
+<ol>
+	<li>Coming Soon!</li>
+</ol>
+
+<hr />
+
+<h2>Video</h2>
+<p><iframe width="560" height="315" src="https://www.youtube.com/embed/bjBOWVGSF4Y" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
+
+<hr />
+
+<h2>Extras</h2>
+<ul>
+	<li>The "Burdened" buff can be edited and have levels, set your penalties there.</li>
+	<li>Please note this system does not limit the amount of items that can be carried. It just penalizes carrying too many items.</li>
+	<li>Should the Burdened buff be removed from the player (via Healing/Debuff) it will be re-applied about a second later again automatically.</li>
+	<li>The amount of levels your skill will require, depends on the range of total weight / current weight in your game. You can even have just 1 level, but there can be a much finer granularity if you wish. The formula is quite simple: Current Weight divided by Max Weight.</li>
+	<li>There is a <strong>Max Level</strong> for the burdened skill that you can set, to prevent it from shooting through the roof.</li>
+	<li>You can set a Attribute that will increase the players carrying capability. This only works with the Attributes AddOn, not the default attributes!</li>
+</ul>
+
+<hr />
+
+<p>Crowon Studio&copy;2018 - for personal and commercial game projects, not for sharing or re-sale</p>

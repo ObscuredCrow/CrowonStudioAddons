@@ -1,0 +1,177 @@
+<style>
+	@import "https://fonts.googleapis.com/css?family=Open Sans:regular,semibold,italic,italicsemibold|Inconsolata&amp;v2";
+
+	body {
+		font-family: "Open Sans";
+		margin: 6em 2em 2em 2em;
+	}
+
+		body:before {
+			content: '';
+			position: fixed;
+			top: 2%;
+			right: 3%;
+			height: 256px;
+			width: 256px;
+			background: url(https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowonStudio-Top-1024x1024.png) no-repeat 100% 100%;
+			background-size: contain;
+			z-index: 10;
+			opacity: 0.5;
+		}
+
+	h1, h2, h3, h4 {
+		font-weight: 600;
+	}
+
+	h1 {
+		position: fixed;
+		background: -webkit-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -moz-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -ms-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -o-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		width: 100%;
+		height: 80px;
+		padding: 10px 10px 10px 1em;
+		left: 0;
+		top: 0;
+		margin: 0;
+	}
+
+		h1 img {
+			height: 30px;
+			vertical-align: middle;
+			margin-bottom: 8px;
+		}
+
+	a {
+		color: navy;
+	}
+
+	pre {
+		background: #eee;
+		margin-left: 2em;
+		padding: 5px;
+		border-left: 3px solid #ccc;
+	}
+</style>
+
+<h1>
+	<a href="https://discord.gg/YkMbDHs" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2021/01/discordlogo.png" style="width:48px; height:48px"></a>
+	<a href="https://crowon-studio.com" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowMoon.png" style="width:48px; height:48px"></a>
+	Prestige Classes
+</h1>
+
+<table class="wp-block-table is-style-stripes">
+	<tbody>
+		<tr>
+			<td><strong>Version:</strong></td>
+			<td>2021.100</td>
+			<td><strong>Requirements:</strong></td>
+			<td>uMMORPG3d</td>
+			<td><strong>Script Define:</strong></td>
+			<td>_CSPRESTIGECLASSES</td>
+		</tr>
+		<tr>
+			<td><strong>Core Changes:</strong></td>
+			<td>Yes</td>
+			<td><strong>Tutorial Video:</strong></td>
+			<td>No</td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Description</h2>
+<p>
+	<strong>Requires: Usage Requirements</strong>
+	<br /><br />
+	Adds a optional extra class to each player prefab that can be acquired by using a special item. Using the item adds a "prestige class"
+	to the player, subsequent item uses can change the class to another class etc.
+	<br /><br />
+	Skills and Items can now be limited to be useable/castable/learnable only by one or more prestige classes.
+	<br /><br />
+	Already learned skills are kept and can still be used, even when changing prestige class (but you can set it up so that skills might
+	not be useable after class change).
+	<br /><br />
+	In addition, all interaction requirements can now also ask for a specific prestige class.
+</p>
+
+<hr />
+
+<h2>Core Changes</h2>
+<p>
+	Some add-ons require changes to the core framework in order to function. This add-on requires the following change(s):
+</p>
+
+<ol>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>Player.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>
+// helper function for command and UI
+// -> this is for learning and upgrading!
+public bool CanUpgradeSkill(Skill skill)
+{
+	return skill.level < skill.maxLevel &&
+		level >= skill.upgradeRequiredLevel &&
+		skillExperience >= skill.upgradeRequiredSkillExperience &&
+		(skill.predecessor == null || (HasLearnedSkillWithLevel(skill.predecessor.name, skill.predecessorLevel)));
+}
+</code></pre>
+			<p>Modify to match:</p>
+			<pre><code>
+// helper function for command and UI
+// -> this is for learning and upgrading!
+public bool CanUpgradeSkill(Skill skill)
+{
+	return <span style="color: #0000ff;">UCE_CanUpgradeSkill(skill) &&</span>
+		skill.level < skill.maxLevel &&
+		level >= skill.upgradeRequiredLevel &&
+		skillExperience >= skill.upgradeRequiredSkillExperience &&
+		(skill.predecessor == null || (HasLearnedSkillWithLevel(skill.predecessor.name, skill.predecessorLevel)));
+}
+			</code></pre>
+		</details>
+	</li>
+</ol>
+
+<hr />
+
+<h2>Installation</h2>
+<ol>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Move all Content from <strong>Resources [Move to Resources]</strong> to your Resources folder.</li>
+</ol>
+
+<hr />
+
+<h2>Screenshots</h2>
+<p>None.</p>
+<!--<p><img class="alignnone size-full wp-image-3418" src="" alt="" width="560" height="315" /></p>-->
+
+<hr />
+
+<h2>Video</h2>
+<p>None.</p>
+<!--<p><iframe width="560" height="315" src="" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>-->
+
+<hr />
+
+<h2>Extras</h2>
+<ul>
+	<li>Check the new section in your item and skill templates, look for <strong>Usage Requirements</strong> and <strong>allowed Prestige Classes</strong> therein.</li>
+	<li>Check this <strong>Items > Resources</strong> folder for an example item that allows a player to acquire a specific prestige class.</li>
+	<li>Check your player prefabs for the new <strong>Prestige Class</strong> setting to allow your players to start the game with a prestige class already.</li>
+	<li>A player can always have just one single prestige class. When acquiring a new one, the old one is replaced.</li>
+	<li>It makes sense to reward players with a prestige class item when completing a quest. In addition, the UCE Traits AddOn allows players to choose a prestige class at the beginning of the game.</li>
+	<li>The <strong>learnable prestige classes</strong> option on skills limits what classes are allowed to learn/upgrade that skill. It does not affect usage!</li>
+	<li>The <strong>usage requirements -> allowed prestigage classes</strong> limits the usage/activation/equip of items and skills. It does not affect learning or acquisition!</li>
+	<li>Note that all <strong>interaction requirements</strong> on other AddOns can be limited to a prestige class as well (e.g. you can make prestige class based teleporters)</li>
+</ul>
+
+<hr />
+
+<p>Crowon Studio&copy;2018 - for personal and commercial game projects, not for sharing or re-sale</p>

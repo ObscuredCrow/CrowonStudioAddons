@@ -1,0 +1,149 @@
+<style>
+	@import "https://fonts.googleapis.com/css?family=Open Sans:regular,semibold,italic,italicsemibold|Inconsolata&amp;v2";
+
+	body {
+		font-family: "Open Sans";
+		margin: 6em 2em 2em 2em;
+	}
+
+		body:before {
+			content: '';
+			position: fixed;
+			top: 2%;
+			right: 3%;
+			height: 256px;
+			width: 256px;
+			background: url(https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowonStudio-Top-1024x1024.png) no-repeat 100% 100%;
+			background-size: contain;
+			z-index: 10;
+			opacity: 0.5;
+		}
+
+	h1, h2, h3, h4 {
+		font-weight: 600;
+	}
+
+	h1 {
+		position: fixed;
+		background: -webkit-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -moz-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -ms-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -o-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		width: 100%;
+		height: 80px;
+		padding: 10px 10px 10px 1em;
+		left: 0;
+		top: 0;
+		margin: 0;
+	}
+
+		h1 img {
+			height: 30px;
+			vertical-align: middle;
+			margin-bottom: 8px;
+		}
+
+	a {
+		color: navy;
+	}
+
+	pre {
+		background: #eee;
+		margin-left: 2em;
+		padding: 5px;
+		border-left: 3px solid #ccc;
+	}
+</style>
+
+<h1>
+	<a href="https://discord.gg/YkMbDHs" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2021/01/discordlogo.png" style="width:48px; height:48px"></a>
+	<a href="https://crowon-studio.com" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowMoon.png" style="width:48px; height:48px"></a>
+	Character Creation
+</h1>
+
+<table class="wp-block-table is-style-stripes">
+	<tbody>
+		<tr>
+			<td><strong>Version:</strong></td>
+			<td>2021.100</td>
+			<td><strong>Requirements:</strong></td>
+			<td>uMMORPG3d</td>
+			<td><strong>Script Define:</strong></td>
+			<td>No</td>
+		</tr>
+		<tr>
+			<td><strong>Core Changes:</strong></td>
+			<td>Yes</td>
+			<td><strong>Tutorial Video:</strong></td>
+			<td>No</td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Description</h2>
+<p>
+	Adds a character creation interface to the game that replaces the default interface. It allows 
+	you to look at the available classes while creating a new character.
+</p>
+
+<hr />
+
+<h2>Core Changes</h2>
+<p>
+	Some add-ons require changes to the core framework in order to function. This add-on requires the following change(s):
+</p>
+
+<ol>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>UICharacterSelection.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>public UICharacterCreation uiCharacterCreation;</code></pre>
+			<p>Modify to match:</p>
+			<pre><code>public <span style="color: #0000ff;">UCE_UI_CharacterCreation</span> uiCharacterCreation;</code></pre>
+		</details>
+	</li>
+</ol>
+
+<hr />
+
+<h2>Installation</h2>
+<ol>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Move the <strong>CharacterCreationSpawnPoint</strong> to any area of your scene. This will be where the preview of the player model is created. It should be a special area way outside of the real playable region of your game.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Move the <strong>Creation Transform</strong> to that area as well and make it look at your <strong>CharacterCreationSpawnPoint</strong>.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Add the <strong>UCE_UI_CharacterCreation</strong> UI element to your canvas. Make sure to put it directly above the default <strong>Character Selection</strong> in your canvas.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Check the <strong>Class List</strong> and expand the list to match the number of classes available in your game.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Add buttons and text to each entry in the <strong>Class List</strong>. If you have more than 2, add a new button and link that button and its text as well.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Link the <strong>SpawnPoint</strong> to the <strong>CharacterSpawnPoint</strong>.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Link the <strong>Network Manager</strong> to the Network Manager in your scene.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Link the <strong>Creation Camera Location</strong> to the <strong>Creation Transform</strong> in your scene.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Finally make sure to deactivate the old Character Creation UI element. Do not delete them (we might need them later for updates).</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Now link the new <strong>UCE_UI_CharacterCreation</strong> in the default CharacterSelection in the inspector. To activate the new Character Creation panel instead of the default one.</li>
+</ol>
+
+<hr />
+
+<h2>Screenshots</h2>
+<p>None.</p>
+<!--<p><img class="alignnone size-full wp-image-3418" src="" alt="" width="560" height="315" /></p>-->
+
+<hr />
+
+<h2>Video</h2>
+<p>None.</p>
+<!--<p><iframe width="560" height="315" src="" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>-->
+
+<hr />
+
+<h2>Extras</h2>
+<ul>
+	<li>If you check "Look at Camera" it will force the model to always look towards the "Creation Transform". Uncheck if not required.</li>
+</ul>
+
+<hr />
+
+<p>Crowon Studio&copy;2018 - for personal and commercial game projects, not for sharing or re-sale</p>

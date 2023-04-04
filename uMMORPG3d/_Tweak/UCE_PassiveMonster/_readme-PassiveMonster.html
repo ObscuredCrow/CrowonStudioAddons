@@ -1,0 +1,205 @@
+<style>
+	@import "https://fonts.googleapis.com/css?family=Open Sans:regular,semibold,italic,italicsemibold|Inconsolata&amp;v2";
+
+	body {
+		font-family: "Open Sans";
+		margin: 6em 2em 2em 2em;
+	}
+
+		body:before {
+			content: '';
+			position: fixed;
+			top: 2%;
+			right: 3%;
+			height: 256px;
+			width: 256px;
+			background: url(https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowonStudio-Top-1024x1024.png) no-repeat 100% 100%;
+			background-size: contain;
+			z-index: 10;
+			opacity: 0.5;
+		}
+
+	h1, h2, h3, h4 {
+		font-weight: 600;
+	}
+
+	h1 {
+		position: fixed;
+		background: -webkit-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -moz-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -ms-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -o-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		width: 100%;
+		height: 80px;
+		padding: 10px 10px 10px 1em;
+		left: 0;
+		top: 0;
+		margin: 0;
+	}
+
+		h1 img {
+			height: 30px;
+			vertical-align: middle;
+			margin-bottom: 8px;
+		}
+
+	a {
+		color: navy;
+	}
+
+	pre {
+		background: #eee;
+		margin-left: 2em;
+		padding: 5px;
+		border-left: 3px solid #ccc;
+	}
+</style>
+
+<h1>
+	<a href="https://discord.gg/YkMbDHs" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2021/01/discordlogo.png" style="width:48px; height:48px"></a>
+	<a href="https://crowon-studio.com" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowMoon.png" style="width:48px; height:48px"></a>
+	Passive Monster
+</h1>
+
+<table class="wp-block-table is-style-stripes">
+	<tbody>
+		<tr>
+			<td><strong>Version:</strong></td>
+			<td>2021.100</td>
+			<td><strong>Requirements:</strong></td>
+			<td>uMMORPG3d</td>
+			<td><strong>Script Define:</strong></td>
+			<td>No</td>
+		</tr>
+		<tr>
+			<td><strong>Core Changes:</strong></td>
+			<td>Yes</td>
+			<td><strong>Tutorial Video:</strong></td>
+			<td>No</td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Description</h2>
+<p>
+	Passive Monster gives your monsters more flavor, you can setup completely passive monsters. Which will run on
+	being attacked or on a percentage of health missing. Or you can setup an afraid monster and tell it at what
+	percentage of health it will run away from combat.
+</p>
+
+<hr />
+
+<h2>Core Changes</h2>
+<p>
+	Some add-ons require changes to the core framework in order to function. This add-on requires the following change(s):
+</p>
+
+<ol>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>Monster.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>string UpdateServer_IDLE()</code></pre>
+			<p>Inside this code locate this line:</p>
+			<pre><code>if (EventSkillRequest())</code></pre>
+			<p>Add this code above that:</p>
+			<pre><code><span style="color: #0000ff;">if (EventRunaway()) { return Runaway(); } // runaway when hurt</span></code></pre>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>Monster.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>string UpdateServer_MOVING()</code></pre>
+			<p>Inside this code locate this line:</p>
+			<pre><code>if (EventTargetTooFarToFollow())</code></pre>
+			<p>Add this code above that:</p>
+			<pre><code><span style="color: #0000ff;">if (EventRunaway()) { return Runaway(); } // runaway when hurt</span></code></pre>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>Monster.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>string UpdateServer_CASTING()</code></pre>
+			<p>Inside this code locate this line:</p>
+			<pre><code>if (EventSkillFinished())</code></pre>
+			<p>Add this code above that:</p>
+			<pre><code><span style="color: #0000ff;">if (EventRunaway()) { return Runaway(); } // runaway when hurt</span></code></pre>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>Monster.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>string UpdateServer_DEAD()</code></pre>
+			<p>Inside this code locate this line:</p>
+			<pre><code>if (EventDied()) { } // don't care, of course we are dead</code></pre>
+			<p>Add this code below that:</p>
+			<pre><code><span style="color: #0000ff;">if (EventRunaway()) { } // don't care</span></code></pre>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>Monster.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>public override void OnAggro(Entity entity)</code></pre>
+			<p>Inside this code locate this line:</p>
+			<pre><code>Utils.InvokeMany(typeof(Monster), this, "OnAggro_", entity);</code></pre>
+			<p>Add this code above that:</p>
+			<pre><code><span style="color: #0000ff;">if (HealthPercent() < healthThreshold && isAfraid) target = null;</span></code></pre>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>Monster.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>
+public override bool CanAttack(Entity entity)
+{
+	return base.CanAttack(entity) &&
+		(entity is Player ||
+		entity is Pet ||
+		entity is Mount);
+}
+			</code></pre>
+			<p>Modify to match:</p>
+			<pre><code>
+public override bool CanAttack(Entity entity)
+{
+	<span style="color: #0000ff;">return base.CanAttack(entity) && (entity is Player || entity is Pet || entity is Mount) && !isPassive;</span>
+}
+</code></pre>
+		</details>
+	</li>
+</ol>
+
+<hr />
+
+<h2>Usage</h2>
+<ol>
+	<li>Coming Soon!</li>
+</ol>
+
+<hr />
+
+<h2>Video</h2>
+<!--<p><iframe width="560" height="315" src="" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>-->
+
+<hr />
+
+<p>Crowon Studio&copy;2018 - for personal and commercial game projects, not for sharing or re-sale</p>

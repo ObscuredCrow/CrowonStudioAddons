@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cecee1b40ca340a185ed5938da4aceb, type: 3}
+  m_Name: UCE Guild Upgrades
+  m_EditorClassIdentifier: 
+  guildCapacity:
+    baseValue: 10
+    bonusPerLevel: 10
+  rewardItem: []
+  guildUpgradeCost:
+  - itemCost: []
+    goldCost: 100
+    coinCost: 0
+    healthCost: 0
+    manaCost: 0
+    experienceCost: 0
+    skillExperienceCost: 0
+    honorCurrencyCost: []
+  guildUpgradeLabel: Guild upgraded!

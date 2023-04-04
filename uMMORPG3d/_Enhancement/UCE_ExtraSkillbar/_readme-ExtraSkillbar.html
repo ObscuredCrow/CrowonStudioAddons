@@ -1,0 +1,128 @@
+<style>
+	@import "https://fonts.googleapis.com/css?family=Open Sans:regular,semibold,italic,italicsemibold|Inconsolata&amp;v2";
+
+	body {
+		font-family: "Open Sans";
+		margin: 6em 2em 2em 2em;
+	}
+
+		body:before {
+			content: '';
+			position: fixed;
+			top: 2%;
+			right: 3%;
+			height: 256px;
+			width: 256px;
+			background: url(https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowonStudio-Top-1024x1024.png) no-repeat 100% 100%;
+			background-size: contain;
+			z-index: 10;
+			opacity: 0.5;
+		}
+
+	h1, h2, h3, h4 {
+		font-weight: 600;
+	}
+
+	h1 {
+		position: fixed;
+		background: -webkit-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -moz-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -ms-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -o-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		width: 100%;
+		height: 80px;
+		padding: 10px 10px 10px 1em;
+		left: 0;
+		top: 0;
+		margin: 0;
+	}
+
+		h1 img {
+			height: 30px;
+			vertical-align: middle;
+			margin-bottom: 8px;
+		}
+
+	a {
+		color: navy;
+	}
+
+	pre {
+		background: #eee;
+		margin-left: 2em;
+		padding: 5px;
+		border-left: 3px solid #ccc;
+	}
+</style>
+
+<h1>
+	<a href="https://discord.gg/YkMbDHs" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2021/01/discordlogo.png" style="width:48px; height:48px"></a>
+	<a href="https://crowon-studio.com" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowMoon.png" style="width:48px; height:48px"></a>
+	Extra Skillbar
+</h1>
+
+<table class="wp-block-table is-style-stripes">
+	<tbody>
+		<tr>
+			<td><strong>Version:</strong></td>
+			<td>2021.100</td>
+			<td><strong>Requirements:</strong></td>
+			<td>uMMORPG3d</td>
+			<td><strong>Script Define:</strong></td>
+			<td>No</td>
+		</tr>
+		<tr>
+			<td><strong>Core Changes:</strong></td>
+			<td>No</td>
+			<td><strong>Tutorial Video:</strong></td>
+			<td>No</td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Description</h2>
+<p>
+	Allows you to create equipment specific extra-skillbars.
+	<br /><br />
+	Adds an extra skillbar above the default one, assign keys to it via the player prefabs. Each weapon can have an ID number
+	now. When changing equipment the extra skillbar of the corresponding ID is shown.
+	<br /><br />
+	Now players can assign skill sets to these extra skillbars and when switching weapon, the correct skillbar is shown.
+	Example: Equipping an "Axe" shows skillbar ID 1. Then the player can add "Axe skills" to that skillbar. Whenever switching
+	to an Axe, the skillbar 1 is shown together with all axe skills assigned to it.
+</p>
+
+<hr />
+
+<h2>Installation</h2>
+<ol>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Add all Prefabs from <strong>Prefabs [Add to Canvas]</strong> to your Canvas.</li>
+</ol>
+
+<hr />
+
+<h2>Usage</h2>
+<ol>
+	<li>Coming Soon!</li>
+</ol>
+
+<hr />
+
+<h2>Video</h2>
+<p><iframe width="560" height="315" src="https://www.youtube.com/embed/bjBOWVGSF4Y" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
+
+<hr />
+
+<h2>Extras</h2>
+<ul>
+	<li>On each equipable item, there is now a "skillbarIndex", set to 0 to disable the skillbar for this item.</li>
+	<li>When equipping an item with skillbarIndex greater than 0, it will show that skillbar and the player can assign skills to it. When equipping a item with index 0, it will hide the skillbar again.</li>
+	<li>All extra skillbars are saved client side, so the player could setup a skillbar for each index number (1=axes, 2=swords, 3=daggers and so on).</li>
+	<li>Of course, this AddOn only makes sense with Weapon items, but it works with every equipment slot. You should just be careful that the player is not able to equip several items with a skillbar index at the same time, as this will mess up the system.</li>
+</ul>
+
+<hr />
+
+<p>Crowon Studio&copy;2018 - for personal and commercial game projects, not for sharing or re-sale</p>

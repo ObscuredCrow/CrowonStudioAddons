@@ -1,0 +1,267 @@
+<style>
+	@import "https://fonts.googleapis.com/css?family=Open Sans:regular,semibold,italic,italicsemibold|Inconsolata&amp;v2";
+
+	body {
+		font-family: "Open Sans";
+		margin: 6em 2em 2em 2em;
+	}
+
+		body:before {
+			content: '';
+			position: fixed;
+			top: 2%;
+			right: 3%;
+			height: 256px;
+			width: 256px;
+			background: url(https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowonStudio-Top-1024x1024.png) no-repeat 100% 100%;
+			background-size: contain;
+			z-index: 10;
+			opacity: 0.5;
+		}
+
+	h1, h2, h3, h4 {
+		font-weight: 600;
+	}
+
+	h1 {
+		position: fixed;
+		background: -webkit-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -moz-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -ms-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -o-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		width: 100%;
+		height: 80px;
+		padding: 10px 10px 10px 1em;
+		left: 0;
+		top: 0;
+		margin: 0;
+	}
+
+		h1 img {
+			height: 30px;
+			vertical-align: middle;
+			margin-bottom: 8px;
+		}
+
+	a {
+		color: navy;
+	}
+
+	pre {
+		background: #eee;
+		margin-left: 2em;
+		padding: 5px;
+		border-left: 3px solid #ccc;
+	}
+</style>
+
+<h1>
+	<a href="https://discord.gg/YkMbDHs" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2021/01/discordlogo.png" style="width:48px; height:48px"></a>
+	<a href="https://crowon-studio.com" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowMoon.png" style="width:48px; height:48px"></a>
+	Combat Remastered
+</h1>
+
+<table class="wp-block-table is-style-stripes">
+	<tbody>
+		<tr>
+			<td><strong>Version:</strong></td>
+			<td>2021.100</td>
+			<td><strong>Requirements:</strong></td>
+			<td>uMMORPG3d</td>
+			<td><strong>Script Define:</strong></td>
+			<td>No</td>
+		</tr>
+		<tr>
+			<td><strong>Core Changes:</strong></td>
+			<td>Yes</td>
+			<td><strong>Tutorial Video:</strong></td>
+			<td>No</td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Description</h2>
+<p>
+	Enhances the built in combat system giving your players the ability to use any weapon type. It adds weapon types 
+	to items so you can control how they work from there. It utilizes the original animator for ease of use instead 
+	of creating multiple animators.
+</p>
+
+<hr />
+
+<h2>Core Changes</h2>
+<p>
+	Some add-ons require changes to the core framework in order to function. This add-on requires the following change(s):
+</p>
+
+<ol>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>Player.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>
+// equipment ///////////////////////////////////////////////////////////////
+private void OnEquipmentChanged(SyncListItemSlot.Operation op, int index, ItemSlot slot)
+{
+	// update the model
+	RefreshLocation(index);
+
+	// addon system hooks
+	Utils.InvokeMany(typeof(Player), this, "OnEquipmentChanged_");
+}
+			</code></pre>
+			<p>Modify to match:</p>
+			<pre><code>
+// equipment ///////////////////////////////////////////////////////////////
+private void OnEquipmentChanged(SyncListItemSlot.Operation op, int index, ItemSlot slot)
+{
+	// update the model
+	RefreshLocation(index);
+<span style="color: #0000ff;">
+#if _FHIZCURSEDEQUIPMENT
+	if (slot.item.amount > 0 && ((EquipmentItem)slot.item.data).CanUnequipClick(this, (EquipmentItem)slot.item.data))
+		combatRemastered.AutoRemoveEquipment(slot);
+#else
+	combatRemastered.AutoRemoveEquipment(slot);
+#endif
+</span>
+	// addon system hooks
+	Utils.InvokeMany(typeof(Player), this, "OnEquipmentChanged_");
+}
+			</code></pre>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>Database.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>
+void SaveSkills(Player player)
+{
+	// skills: remove old entries first, then add all new ones
+	ExecuteNonQuery("DELETE FROM character_skills WHERE character=@character", new SqliteParameter("@character", player.name));
+		foreach (Skill skill in player.skills)
+			if (skill.level > 0) // only learned skills to save queries/storage/time
+			// castTimeEnd and cooldownEnd are based on NetworkTime.time,
+			// which will be different when restarting the server, so let's
+			// convert them to the remaining time for easier save & load
+			// note: this does NOT work when trying to save character data
+			//       shortly before closing the editor or game because
+			//       NetworkTime.time is 0 then.
+			ExecuteNonQuery("INSERT INTO character_skills VALUES (@character, @name, @level, @castTimeEnd, @cooldownEnd)",
+				new SqliteParameter("@character", player.name),
+				new SqliteParameter("@name", skill.name),
+				new SqliteParameter("@level", skill.level),
+				new SqliteParameter("@castTimeEnd", skill.CastTimeRemaining()),
+				new SqliteParameter("@cooldownEnd", skill.CooldownRemaining()));
+}
+			</code></pre>
+			<p>Modify to match:</p>
+			<pre><code>
+void SaveSkills(Player player)
+{
+	<span style="color: #0000ff;">if (player.lastCombatTime > 0 || player.GetComponent&#60;UCE_CombatRemastered&#62;().changingEquipment) return;</span>
+
+	// skills: remove old entries first, then add all new ones
+	ExecuteNonQuery("DELETE FROM character_skills WHERE character=@character", new SqliteParameter("@character", player.name));
+	foreach (Skill skill in player.skills)
+		if (skill.level > 0) // only learned skills to save queries/storage/time
+		// castTimeEnd and cooldownEnd are based on NetworkTime.time,
+		// which will be different when restarting the server, so let's
+		// convert them to the remaining time for easier save & load
+		// note: this does NOT work when trying to save character data
+		//       shortly before closing the editor or game because
+		//       NetworkTime.time is 0 then.
+		<span style="color: #0000ff;">ExecuteNonQuery("INSERT OR IGNORE INTO character_skills VALUES (@character, @name, @level, @castTimeEnd, @cooldownEnd)",</span>
+			new SqliteParameter("@character", player.name),
+			new SqliteParameter("@name", skill.name),
+			new SqliteParameter("@level", skill.level),
+			new SqliteParameter("@castTimeEnd", skill.CastTimeRemaining()),
+			new SqliteParameter("@cooldownEnd", skill.CooldownRemaining()));
+}
+</code></pre>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>ScriptableSkill.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>
+public virtual bool CheckSelf(Entity caster, int skillLevel)
+{
+	// has a weapon (important for projectiles etc.), no cooldown, hp, mp?
+	return caster.health > 0 &&
+		caster.mana >= manaCosts.Get(skillLevel) &&
+		caster.GetEquippedWeaponCategory().StartsWith(requiredWeaponCategory);
+}
+			</code></pre>
+			<p>Modify to match:</p>
+			<pre><code>
+public virtual bool CheckSelf(Entity caster, int skillLevel)
+{
+	<span style="color: #0000ff;">if (caster is Player)
+	{
+		// has a equipment (important for projectiles etc.), no cooldown, hp, mp?
+		return caster.health > 0 &&
+			caster.mana >= manaCosts.Get(skillLevel) &&
+			caster.GetEquippedWeaponCategory().StartsWith(requiredWeaponCategory) &&
+			(caster as Player).CheckEquipSkills(this);
+	}
+	else
+	{
+		// has a weapon (important for projectiles etc.), no cooldown, hp, mp?
+		return caster.health > 0 &&
+			caster.mana >= manaCosts.Get(skillLevel) &&
+			caster.GetEquippedWeaponCategory().StartsWith(requiredWeaponCategory);
+	}</span>
+}
+			</code></pre>
+		</details>
+	</li>
+</ol>
+
+<hr />
+
+<h2>Installation</h2>
+<ol>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Add the following bools to your animator: UNARMED, SLASH1H, PIERCE1H, BLUDGEON1H, SLASH2H, PIERCE2H, BLUDGEON2H, RANGEDTHROWN, RANGEDBOW, RANGEDGUN, SHIELD, DUAL</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Add a new animation state for each bool created, this will be there default auto attack.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> For each new animation state create a transition to each with CASTING, the weapon type it is (Example: UNARMED etc...), then the skill you want used (Example: Normal Attack (Warrior) etc...)</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Add all Scripts from <strong>Scripts [Attach to Players]</strong> to all Player Prefabs.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Attach all default auto attack skills you want to UCE_CombatRemasted under your player prefab. Note they must be in order like this: UNARMED, SLASH1H, PIERCE1H, BLUDGEON1H, SLASH2H, PIERCE2H, BLUDGEON2H, RANGEDTHROWN, RANGEDBOW, RANGEDGUN, SHIELD, DUAL</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> On your player prefab under default skills make sure all of the default auto attack skills you just set are in the same order there, starting from the first spot. All other skills need to be after those.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Change your equipment slot Weapon to MainHand and Shield to OffHand. Make sure you mark your items accordingly.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> If using ammo on weapons: Add a new Equipment Info slot to your player prefab called Ammo, make sure you default load it with some ammo as well.</li>
+</ol>
+
+<hr />
+
+<h2>Screenshots</h2>
+<p>None.</p>
+<!--<p><img class="alignnone size-full wp-image-3418" src="" alt="" width="560" height="315" /></p>-->
+
+<hr />
+
+<h2>Video</h2>
+<p>None.</p>
+<!--<p><iframe width="560" height="315" src="" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>-->
+
+<hr />
+
+<h2>Extras</h2>
+<ul>
+	<li>If you're using UMA Addon from Sehlor, you will need to put the Player.cs change in the UMA Player script. Just put the combatRemastered.AutoRemoveEquipment(slot); right above RefreshLocation(index); in there.</li>
+	<li>If you're using MySql you will need to open Database_MySql.cs and navigate to where Save Character Skills is at and change INSERT INTO to INSERT IGNORE INTO.</li>
+</ul>
+
+<hr />
+
+<p>Crowon Studio&copy;2018 - for personal and commercial game projects, not for sharing or re-sale</p>

@@ -1,0 +1,238 @@
+<style>
+@import "https://fonts.googleapis.com/css?family=Open Sans:regular,semibold,italic,italicsemibold|Inconsolata&amp;v2";
+body {
+  font-family: "Open Sans";
+  margin: 6em 2em 2em 2em;
+}
+body:before {
+  content: '';
+  position: fixed;
+  top: 2%;
+  right: 3%;
+  height: 256px;
+  width: 256px;
+  background: url(https://indie-mmo.net/addon-readmes/images/global/fhiz-watermark.png) no-repeat 100% 100%;
+  background-size: contain;
+  z-index: 10;
+  opacity: 0.5;
+}
+h1, h2, h3, h4 {
+  font-weight: 600;
+}
+h1 {
+  position: fixed;
+  background: -webkit-linear-gradient(top, white 65%, rgba(255,255,255,0));
+  background: -moz-linear-gradient(top, white 65%, rgba(255,255,255,0));
+  background: -ms-linear-gradient(top, white 65%, rgba(255,255,255,0));
+  background: -o-linear-gradient(top, white 65%, rgba(255,255,255,0));
+  width: 100%;
+  height: 80px;
+  padding: 10px 10px 10px 1em;
+  left: 0;
+  top: 0;
+  margin: 0;
+}
+h1 img {
+  height: 30px;
+  vertical-align: middle;
+  margin-bottom: 8px;
+}
+a { color: navy; }
+pre {
+  background: #eee;
+  margin-left: 2em;
+  padding: 5px;
+  border-left: 3px solid #ccc;
+}
+</style>
+
+<h1>
+<a href="https://www.patreon.com/Fhizban" target="_blank"><img src="https://indie-mmo.net/addon-readmes/images/global/patreon-badge.png" style="width:196px; height:48px"></a>
+<a href="https://www.youtube.com/channel/UC31c_fqaRo7B-omggZcMhxA" target="_blank"><img src="https://indie-mmo.net/addon-readmes/images/global/youtube-icon.png" style="width:48px; height:48px"></a>
+<a href="https://discord.gg/YkMbDHs" target="_blank"><img src="https://indie-mmo.net/addon-readmes/images/global/discord-icon.png" style="width:48px; height:48px"></a>
+<a href="https://www.indie-mmo.net" target="_blank"><img src="https://indie-mmo.net/addon-readmes/images/global/link-icon.png" style="width:48px; height:48px"></a>
+UMA Addon 2019.101
+</h1>
+
+<p>
+<i>This AddOn Integrates Unity Multipurpose Avatar with uMMORPG.</i>
+</p>
+
+<hr />
+
+<h3>Additional Requirements</h3>
+<p>
+Some UCE AddOns require other AddOns to be installed first in order to work properly:
+<br><br>
+This AddOn requires the following AddOns(s):
+<pre>
+<code><a href="https://unity3d.com/get-unity/download" target="_blank">Unity Engine</a>, 
+  <a href="http://ummorpg.net" target="_blank">uMMORPG3d Asset</a></code>, 
+  <a href="https://assetstore.unity.com/packages/3d/characters/uma-2-unity-multipurpose-avatar-35611" target="_blank">UMA 2.0</a></code>, 
+  <a href="https://indie-mmo.net/character-creation/" target="_blank">Character Creation</a></code>
+</pre>
+</p>
+
+<h3>Scripting Defines</h3>
+<p>
+No Sripting Defines here!
+</p>
+
+<h3>Core Changes</h3>
+<p>
+Many AddOns require changes to the uMMORPG3d core scripts in order to function. The most common core changes are listed in a extra ReadMe contained in the UCE Tools AddOn (see <a href="https://indie-mmo.net/addon-readmes/_required-core-changes.html">HERE</a>). The changes for this AddOn are repeated below as well:
+<br><br>
+This AddOn requires the following core change(s):
+<pre>
+    <code>Apply the global core changes, as stated in the <a href="_required-core-changes.html">Core Changes Readme</a></code>
+</pre>NetworkManagerMMO.cs - Line: ~305, in "void LoadPreview", After:
+<pre>
+  <code>
+// assign basic preview values like name and equipment
+player.name = character.name;
+  </code>
+</pre> Add:
+<pre>
+    <code>
+string decompressor = CompressUMA.Compressor.DecompressDna(character.umaDna);
+player.umaDna = character.umaDna;
+preview.GetComponentInChildren< UMA.CharacterSystem.DynamicCharacterAvatar >().LoadFromRecipeString(decompressor);
+    </a></code>
+</pre>NetworkMessages.cs - Line ~16 Add to CharacterCreateMessage:
+<pre>
+<code>
+public string dna;
+</code>
+</pre>NetworkManagerMMO.cs - Line ~444, Roughly 40 lines in after:
+<pre>
+<code>prefab.name = message.name;
+prefab.account = account;
+prefab.className = classes[message.classIndex].name;</code>
+</pre>Add:
+<pre>
+  <code>
+prefab.umaDna = message.dna;
+  </code>
+</pre>Player.cs - Line ~1784 at RefreshLocation(int index), at the top Add:
+<pre>
+  <code>
+updateUMA();
+ </code>
+</pre>In EquipmentItem.cs - At the top Add:
+<pre>
+<code>
+using UMA;
+</code>
+</pre>In EquipmentItem.cs - Line ~15 Below
+<pre>
+<code>
+public GameObject modelPrefab;
+</code>
+</pre>Add:
+<pre>
+<code>
+public UMATextRecipe maleUmaRecipe;
+public UMATextRecipe femaleUmaRecipe;
+</code>
+</pre>In UCE_UI_CharacterCreation.cs - Line ~135, Change
+<pre>
+<code>
+public void CharacterCreate()
+</code>
+</pre>To:
+<pre>
+<code>
+public virtual void CharacterCreate()
+</code>
+</pre>In UICharacterSelection.cs - Line ~10 Change:
+<pre>
+<code>
+public UCE_UI_CharacterCreation uiCharacterCreation;
+</code>
+</pre>To:
+<pre>
+<code>
+public UCE_UMA_CREATOR uiCharacterCreation;
+</code>
+</pre>In UCE_UI_CharacterCreation - Replace:
+<pre>
+<code>
+public void SetCharacterClass(int _classIndex)
+</code>
+</pre>With:
+<pre>
+<code>
+public virtual void SetCharacterClass(int _classIndex)
+</code>
+</pre>
+
+</p>
+
+<hr>
+
+<h2>INSTALLATION PROCESS</h2>
+
+<h3>Integration Steps</h3>
+<p>
+<ol>
+  <li>[Required] Replace the UCE_UI_CharacterCreation Canvas UI with the provided UI in /Prefabs [Drag to Canvas].</li>
+  <li>[Required] Goto Assets>UMA>Getting Started>UMA_DCS and drag this into your scene. This is required to calculate all UMAs in your scene.</li>
+  <li>[Required] Replace original Player prefabs with new Uma Prefab in /Prefabs. Follow the same steps you would normally take when creating different classes. [Note] don't forget to add your new Player Prefabs to the NetworkManager.</li>
+  <li>[Optional] UMA_NPC available in Prefabs. Simply design it the same as any UMA.</li>
+  <li>[Optional] UMA_MONSTER available in Prefabs. Simply design it the same as any UMA.</li>
+  <li>[Optional] Take a look at the Folder Scripts>UI for UI editing use cases. More details below.</li>
+  <li>[Required] Make sure all EquipmentInfo>Location are blank. To use GameObjects for Equipment Slots, simply add a new blank gameobject to the Bone you'd like to attach it two, then add a UCE_UMA_EQUIPMENTADDON and write the exact name of the slot you want it attached to. Example Name: WeaponBow</li>
+</ol>
+</p>
+
+<h3>Additional Information</h3>
+<pre>
+  <code>
+    In the CharacterCreationUI Parent Object, the UCE_UMA_CREATOR is stored. This handles all Male and Female Hairstyles, and 'Underwear'.
+    To use UMATextRecipes as 'Underwear' Properly, you must goto the Recipe and make sure it is set to slot 'Underwear' and the Shared color[0] is set to 'Undies'.
+  </code>
+</pre>
+<pre>
+  <code>
+    _BUTTON_GENDER.cs : Create a UI>Button, Attach Script, Select Male or Female
+  </code>
+</pre>
+<pre>
+  <code>
+    _BUTTON_HAIRSTYLE.cs : Create a UI>Button, Attach Script, Select both Male and Female Index the button should select from UCE_UMA_CREATOR. [Optional] Index text update parameter.
+  </code>
+</pre>
+<pre>
+  <code>
+    _BUTTON_HAIRSTYLES.cs : Create a UI:Button, Attach Script, Toggle Increase to act as an Increase button, or Deselect to act as a Decrease Button. This reads your gender and increases or decreases the index of said hairstyles.
+  </code>
+</pre>
+<pre>
+  <code>
+    _BUTTON_SELECTCLOTHING.cs : Create a UI>Button, Attach Script, Select both Male and Female Index the button should select from UCE_UMA_CREATOR. [Optional] Index text update parameter.
+  </code>
+</pre>
+<pre>
+  <code>
+    _BUTTON_CHANGECLOTHING.cs : Create a UI:Button, Attach Script, Toggle Increase to act as an Increase button, or Deselect to act as a Decrease Button. This reads your gender and increases or decreases the index of said 'Underwear' Clothing.
+  </code>
+</pre>
+<pre>
+  <code>
+    _EDIT_COLORS.cs : Create a UI>Image, Attach Script, Select Category from Dropdown. [Required] Select Sprite Asset and be sure to toggle ON Read/Write Enabled. 
+<br>    This will allow you to select the color of the pixel you click and set the field from the dropdown.
+  </code>
+</pre>
+<pre>
+  <code>
+      <center>
+          <img width="50%" src="https://i.gyazo.com/7222ed029f7f7ec0197f6c60e0acd25d.png">
+        </center>
+  </code>
+</pre>
+
+<p><i>Copyright Note: Contains several free (MIT) plugins: "Paul's mySQL AddOn", "Suriyun Editor Tools", "WeightedRandomization", "iTween" , "LeanTween" and "Naughty Attributes", all available from the asset store (free) and elsewhere on the web. If you imported one or more of those free assets into your project already, delete the obsolete copy to prevent errors.</i></p>
+
+<hr />
+
+<p>(c) Fhiz - for personal and commercial game projects, not for sharing or re-sale</p>

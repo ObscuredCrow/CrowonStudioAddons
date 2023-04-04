@@ -1,0 +1,211 @@
+<style>
+	@import "https://fonts.googleapis.com/css?family=Open Sans:regular,semibold,italic,italicsemibold|Inconsolata&amp;v2";
+
+	body {
+		font-family: "Open Sans";
+		margin: 6em 2em 2em 2em;
+	}
+
+		body:before {
+			content: '';
+			position: fixed;
+			top: 2%;
+			right: 3%;
+			height: 256px;
+			width: 256px;
+			background: url(https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowonStudio-Top-1024x1024.png) no-repeat 100% 100%;
+			background-size: contain;
+			z-index: 10;
+			opacity: 0.5;
+		}
+
+	h1, h2, h3, h4 {
+		font-weight: 600;
+	}
+
+	h1 {
+		position: fixed;
+		background: -webkit-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -moz-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -ms-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -o-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		width: 100%;
+		height: 80px;
+		padding: 10px 10px 10px 1em;
+		left: 0;
+		top: 0;
+		margin: 0;
+	}
+
+		h1 img {
+			height: 30px;
+			vertical-align: middle;
+			margin-bottom: 8px;
+		}
+
+	a {
+		color: navy;
+	}
+
+	pre {
+		background: #eee;
+		margin-left: 2em;
+		padding: 5px;
+		border-left: 3px solid #ccc;
+	}
+</style>
+
+<h1>
+	<a href="https://discord.gg/YkMbDHs" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2021/01/discordlogo.png" style="width:48px; height:48px"></a>
+	<a href="https://crowon-studio.com" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowMoon.png" style="width:48px; height:48px"></a>
+	Mesh Switcher
+</h1>
+
+<table class="wp-block-table is-style-stripes">
+	<tbody>
+		<tr>
+			<td><strong>Version:</strong></td>
+			<td>2021.100</td>
+			<td><strong>Requirements:</strong></td>
+			<td>uMMORPG3d</td>
+			<td><strong>Script Define:</strong></td>
+			<td>No</td>
+		</tr>
+		<tr>
+			<td><strong>Core Changes:</strong></td>
+			<td>Yes</td>
+			<td><strong>Tutorial Video:</strong></td>
+			<td>No</td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Description</h2>
+<p>
+	Allows you to turn meshes on a player on/off by using items (ideally equipment). Also allows for dynamic exchange of Materials on meshes.
+</p>
+
+<hr />
+
+<h2>Core Changes</h2>
+<p>
+	Some add-ons require changes to the core framework in order to function. This add-on requires the following change(s):
+</p>
+
+<ol>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>Player.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>
+public override void OnStartClient()
+{
+	base.OnStartClient();
+
+	// setup synclist callbacks on client. no need to update and show and
+	// animate equipment on server
+	equipment.Callback += OnEquipmentChanged;
+
+	// refresh all locations once (on synclist changed won't be called
+	// for initial lists)
+	// -> needs to happen before ProximityChecker's initial SetVis call,
+	//    otherwise we get a hidden character with visible equipment
+	//    (hence OnStartClient and not Start)
+	for (int i = 0; i < equipment.Count; ++i)
+	RefreshLocation(i);
+}
+			</code></pre>
+			<p>Modify to match:</p>
+			<pre><code>
+public override void OnStartClient()
+{
+	base.OnStartClient();
+
+	// setup synclist callbacks on client. no need to update and show and
+	// animate equipment on server
+	equipment.Callback += OnEquipmentChanged;
+
+	<span style="color: #0000ff;">Utils.InvokeMany(typeof(Player), this, "OnStartClient_");</span>
+
+	// refresh all locations once (on synclist changed won't be called
+	// for initial lists)
+	// -> needs to happen before ProximityChecker's initial SetVis call,
+	//    otherwise we get a hidden character with visible equipment
+	//    (hence OnStartClient and not Start)
+	for (int i = 0; i < equipment.Count; ++i)
+	RefreshLocation(i);
+}
+			</code></pre>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>Player.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>
+public void RefreshLocation(int index)
+{
+	// ....
+
+	.... lots of code here ...
+
+	.... //
+}
+			</code></pre>
+			<p>Modify to match:</p>
+			<pre><code>
+public void RefreshLocation(int index)
+{
+	//....
+
+	.... still lots of code here ...
+
+	....//
+
+	// addon system hooks
+	<span style="color: #0000ff;">Utils.InvokeMany(typeof(Player), this, "OnRefreshLocation_", index);</span>
+}
+			</code></pre>
+		</details>
+	</li>
+</ol>
+
+<hr />
+
+<h2>Installation</h2>
+<ol>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Drag the Player Prefab to your scene, open the 3D model.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Select the Player and in "Equipment - Equipment Info" search for the Mesh entry.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Then if you want to set i.e. 1 head without helmet and 2 with helmet - search Category Head, there set the Mesh Size to 3 - then link there head naked as Element 0, Head with helmet 1 as Element 1, Head with helmet 2 as Element 2.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Make sure to only activate the default model you want to show on your player, deactivate all others (or they will all show up at once during the game).</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Create 2 items for the helmets, there search for MeshNumber and enter 1 for helmet 1, and 2 for helmet 2</li>
+</ol>
+
+<hr />
+
+<h2>Screenshots</h2>
+<p>None.</p>
+<!--<p><img class="alignnone size-full wp-image-3418" src="" alt="" width="560" height="315" /></p>-->
+
+<hr />
+
+<h2>Video</h2>
+<p>None.</p>
+<!--<p><iframe width="560" height="315" src="" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>-->
+
+<hr />
+
+<h2>Extras</h2>
+<ul>
+	<li>It is important to understand, that this AddOn is only useful if all meshes are already included as part of your player model. If you are using separate models, you can use the default equipment system instead!</li>
+</ul>
+
+<hr />
+
+<p>Crowon Studio&copy;2018 - for personal and commercial game projects, not for sharing or re-sale</p>

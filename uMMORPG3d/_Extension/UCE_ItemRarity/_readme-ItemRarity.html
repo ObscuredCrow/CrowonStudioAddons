@@ -1,0 +1,147 @@
+<style>
+	@import "https://fonts.googleapis.com/css?family=Open Sans:regular,semibold,italic,italicsemibold|Inconsolata&amp;v2";
+
+	body {
+		font-family: "Open Sans";
+		margin: 6em 2em 2em 2em;
+	}
+
+		body:before {
+			content: '';
+			position: fixed;
+			top: 2%;
+			right: 3%;
+			height: 256px;
+			width: 256px;
+			background: url(https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowonStudio-Top-1024x1024.png) no-repeat 100% 100%;
+			background-size: contain;
+			z-index: 10;
+			opacity: 0.5;
+		}
+
+	h1, h2, h3, h4 {
+		font-weight: 600;
+	}
+
+	h1 {
+		position: fixed;
+		background: -webkit-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -moz-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -ms-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -o-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		width: 100%;
+		height: 80px;
+		padding: 10px 10px 10px 1em;
+		left: 0;
+		top: 0;
+		margin: 0;
+	}
+
+		h1 img {
+			height: 30px;
+			vertical-align: middle;
+			margin-bottom: 8px;
+		}
+
+	a {
+		color: navy;
+	}
+
+	pre {
+		background: #eee;
+		margin-left: 2em;
+		padding: 5px;
+		border-left: 3px solid #ccc;
+	}
+</style>
+
+<h1>
+	<a href="https://discord.gg/YkMbDHs" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2021/01/discordlogo.png" style="width:48px; height:48px"></a>
+	<a href="https://crowon-studio.com" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowMoon.png" style="width:48px; height:48px"></a>
+	Item Rarity
+</h1>
+
+<table class="wp-block-table is-style-stripes">
+	<tbody>
+		<tr>
+			<td><strong>Version:</strong></td>
+			<td>2021.100</td>
+			<td><strong>Requirements:</strong></td>
+			<td>uMMORPG3d</td>
+			<td><strong>Script Define:</strong></td>
+			<td>_CSITEMRARITY</td>
+		</tr>
+		<tr>
+			<td><strong>Core Changes:</strong></td>
+			<td>Yes</td>
+			<td><strong>Tutorial Video:</strong></td>
+			<td>No</td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Description</h2>
+<p>
+	Item rarity adds flavor effects to your in-game items by bring a outline to your items based 
+	on the quality level you set. It currently has the types: Poor (grey), Common (white), 
+	Uncommon (green), Rare (blue), Epic (magenta), and Legendary (yellow). It also adds the color 
+	effect to the name of the item in the items tooltip. The following menus all display this 
+	flavor: Equipment, Inventory, Loot, Item Mall, Player Trading, Npc Trading, and Crafting.
+</p>
+
+<hr />
+
+<h2>Core Changes</h2>
+<p>
+	Some add-ons require changes to the core framework in order to function. This add-on requires the following change(s):
+</p>
+
+<ol>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>UIItemMall.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>int currentCategory = 0;</code></pre>
+			<p>Modify to match:</p>
+			<pre><code><span style="color: #0000ff;">public </span>int currentCategory = 0;</code></pre>
+		</details>
+	</li>
+</ol>
+
+<hr />
+
+<h2>Installation</h2>
+<ol>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Add the Script <strong>UCE_ItemRarity</strong> from <strong>Scripts [Add to Windows]</strong> to all of the following windows: Equipment, Inventory, Loot, PlayerTrading, NpcTrading, ItemMall, and Crafting.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Set the <strong>Slot Type</strong> on all of the following windows based on the window, under <strong>UCE_ItemRarity</strong>: Equipment, Inventory, Loot, PlayerTrading, NpcTrading, ItemMall, and Crafting.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Add the script <strong>UCE_RaritySlot</strong> to all of the following slot prefabs: Equipment, Inventory, Loot, PlayerTrading, NpcTrading, ItemMall, and Crafting.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Add the <strong>SquareBorder</strong> to all of the following slot prefabs, as a image UI above all children: Equipment, Inventory, Loot, PlayerTrading, NpcTrading, ItemMall, and Crafting.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Link the <strong>SquareBorder</strong> to the <strong>Outline</strong> on each slots <strong>UCE_RaritySlot</strong> script.</li>
+</ol>
+
+<hr />
+
+<h2>Screenshots</h2>
+<p>None.</p>
+<!--<p><img class="alignnone size-full wp-image-3418" src="" alt="" width="560" height="315" /></p>-->
+
+<hr />
+
+<h2>Video</h2>
+<p>None.</p>
+<!--<p><iframe width="560" height="315" src="" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>-->
+
+<hr />
+
+<h2>Extras</h2>
+<ul>
+	<li>Make sure you set the outline image to stretched.</li>
+</ul>
+
+<hr />
+
+<p>Crowon Studio&copy;2018 - for personal and commercial game projects, not for sharing or re-sale</p>

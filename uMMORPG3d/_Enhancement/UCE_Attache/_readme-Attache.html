@@ -1,0 +1,119 @@
+<style>
+	@import "https://fonts.googleapis.com/css?family=Open Sans:regular,semibold,italic,italicsemibold|Inconsolata&amp;v2";
+
+	body {
+		font-family: "Open Sans";
+		margin: 6em 2em 2em 2em;
+	}
+
+		body:before {
+			content: '';
+			position: fixed;
+			top: 2%;
+			right: 3%;
+			height: 256px;
+			width: 256px;
+			background: url(https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowonStudio-Top-1024x1024.png) no-repeat 100% 100%;
+			background-size: contain;
+			z-index: 10;
+			opacity: 0.5;
+		}
+
+	h1, h2, h3, h4 {
+		font-weight: 600;
+	}
+
+	h1 {
+		position: fixed;
+		background: -webkit-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -moz-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -ms-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -o-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		width: 100%;
+		height: 80px;
+		padding: 10px 10px 10px 1em;
+		left: 0;
+		top: 0;
+		margin: 0;
+	}
+
+		h1 img {
+			height: 30px;
+			vertical-align: middle;
+			margin-bottom: 8px;
+		}
+
+	a {
+		color: navy;
+	}
+
+	pre {
+		background: #eee;
+		margin-left: 2em;
+		padding: 5px;
+		border-left: 3px solid #ccc;
+	}
+</style>
+
+<h1>
+	<a href="https://discord.gg/YkMbDHs" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2021/01/discordlogo.png" style="width:48px; height:48px"></a>
+	<a href="https://crowon-studio.com" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowMoon.png" style="width:48px; height:48px"></a>
+	Attache
+</h1>
+
+<table class="wp-block-table is-style-stripes">
+	<tbody>
+		<tr>
+			<td><strong>Version:</strong></td>
+			<td>2021.100</td>
+			<td><strong>Requirements:</strong></td>
+			<td>uMMORPG3d</td>
+			<td><strong>Script Define:</strong></td>
+			<td>No</td>
+		</tr>
+		<tr>
+			<td><strong>Core Changes:</strong></td>
+			<td>No</td>
+			<td><strong>Tutorial Video:</strong></td>
+			<td>No</td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Description</h2>
+<p>
+	Allows you to attach game objects to Entities, those game objects can spawn and unspawn together with
+	their "parent". They can also spawn and unspawn according to certain rules (like parent under 50% health
+	or parent above 50% health etc.). You can use this to summon minions to aid your parent monster and/or
+	player. Also useable to add blood drops or smoke to monsters with low health etc.
+</p>
+
+<hr />
+
+<h2>Usage</h2>
+<ol>
+	<li>Coming Soon!</li>
+</ol>
+
+<hr />
+
+<h2>Video</h2>
+<p><iframe width="560" height="315" src="https://www.youtube.com/embed/bjBOWVGSF4Y" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>
+
+<hr />
+
+<h2>Extras</h2>
+<ul>
+	<li><strong>Child Game Objects</strong> are the game objects that can be spawned, when the parent meets certain criteria.</li>
+	<li>Make sure that the <strong>Child Game Objects</strong> have been added to your Network Managers list of spawnable prefabs.</li>
+	<li>Child Objects will be spawned at the <strong>Mount Point</strong> of its parent, use the default Mount Point or create a new one on you parent object.</li>
+	<li><strong>Auto Spawn</strong> - the child object will be spawned immediately after the conditions are met (does not apply when child is set to "destroy").</li>
+	<li><strong>Child Conditions</strong> - you can edit all the conditions the parent objects has to meet here, in order for the child to be spawned.</li>
+	<li>You can add more than one child game object per <strong>Attached Child</strong> entry. It will then spawn a child up to the level of the parent object. Example: Parent is level 5 and you enter 10 child objects, it will then spawn child object number 5.</li>
+</ul>
+
+<hr />
+
+<p>Crowon Studio&copy;2018 - for personal and commercial game projects, not for sharing or re-sale</p>

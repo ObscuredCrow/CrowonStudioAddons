@@ -1,0 +1,251 @@
+<style>
+	@import "https://fonts.googleapis.com/css?family=Open Sans:regular,semibold,italic,italicsemibold|Inconsolata&amp;v2";
+
+	body {
+		font-family: "Open Sans";
+		margin: 6em 2em 2em 2em;
+	}
+
+		body:before {
+			content: '';
+			position: fixed;
+			top: 2%;
+			right: 3%;
+			height: 256px;
+			width: 256px;
+			background: url(https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowonStudio-Top-1024x1024.png) no-repeat 100% 100%;
+			background-size: contain;
+			z-index: 10;
+			opacity: 0.5;
+		}
+
+	h1, h2, h3, h4 {
+		font-weight: 600;
+	}
+
+	h1 {
+		position: fixed;
+		background: -webkit-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -moz-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -ms-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -o-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		width: 100%;
+		height: 80px;
+		padding: 10px 10px 10px 1em;
+		left: 0;
+		top: 0;
+		margin: 0;
+	}
+
+		h1 img {
+			height: 30px;
+			vertical-align: middle;
+			margin-bottom: 8px;
+		}
+
+	a {
+		color: navy;
+	}
+
+	pre {
+		background: #eee;
+		margin-left: 2em;
+		padding: 5px;
+		border-left: 3px solid #ccc;
+	}
+</style>
+
+<h1>
+	<a href="https://discord.gg/YkMbDHs" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2021/01/discordlogo.png" style="width:48px; height:48px"></a>
+	<a href="https://crowon-studio.com" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowMoon.png" style="width:48px; height:48px"></a>
+	Network Zones
+</h1>
+
+<table class="wp-block-table is-style-stripes">
+	<tbody>
+		<tr>
+			<td><strong>Version:</strong></td>
+			<td>2021.100</td>
+			<td><strong>Requirements:</strong></td>
+			<td>uMMORPG3d</td>
+			<td><strong>Script Define:</strong></td>
+			<td>_CSNETWORKZONES</td>
+		</tr>
+		<tr>
+			<td><strong>Core Changes:</strong></td>
+			<td>Yes</td>
+			<td><strong>Tutorial Video:</strong></td>
+			<td>No</td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Description</h2>
+<p>
+	This modified version of the official NetworkZones AddOn will allow you to run multiple Unity instances
+	on one server and therefore allow your gameworld to span across several scenes instead of just one.
+	<br /><br />
+	<strong>Why Zones are Required</strong>
+	<ul>
+		<li>Unity Technologies themselves recommend to split big scenes into several smaller ones. They recommend it everywhere, for networked and offline projects.</li>
+		<li>A built-in limitation of Unity limits the scene size to 4 GB total (based on file size).</li>
+		<li>A built-in limitation of Unity limits the amount of active connections per unity instance to ca. 1.200 (but we don't need that many anyway)</li>
+		<li>A built-in limitation of Unity limits the amount of active connections per unity instance to ca. 1.200 (but we don't need that many anyway)</li>
+		<li>At a certain size, you will run into floating point precision errors with a large scene.</li>
+		<li>The bigger the NavMesh on a single scene is, the slower the pathfinding process becomes.</li>
+		<li>Global Lighting on a single scene is limited. It's difficult to have both overground and underground areas in one sene.</li>
+		<li>Adding multiple Biomes Assets to one scene will soon make your Clients run into memory limitations (unless you use Asset Bundles).</li>
+	</ul>
+
+	<strong>General Guidelines</strong>
+	<ul>
+		<li>Get ready for a lot of headaches! In fact Unity, uMMORPG, UNET, Mirror/Telepathy Networking where not build to fully support multiple scenes in persistent online environments. We are on unchartered terrain here.</li>
+		<li>Network Zones only work on a compiled server build, it does not work on host + play or a server that runs off the Unity editor. Build a server, run it locally and connect to it instead.</li>
+		<li>Use the very first scene in your project only as a "Init" scene for Character Creation, Selection and Login.</li>
+		<li>Never, ever set a portal to return to the "Init" scene as it will mess up the scene setup.</li>
+		<li>When duplicating scenes, get rid of all game objects with a "Network Identity" in them (Monsters etc.) as their ID numbers will still reference the original scene. Re-add them from prefabs instead.</li>
+	</ul>
+</p>
+
+<hr />
+
+<h2>Core Changes</h2>
+<p>
+	Some add-ons require changes to the core framework in order to function. This add-on requires the following change(s):
+</p>
+
+<ol>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>NetworkManagerMMO.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>
+// add selection script
+preview.AddComponent&lt;SelectableCharacter&gt;();
+preview.GetComponent&lt;SelectableCharacter&gt;().index = selectionIndex;
+			</code></pre>
+			<p>Modify to match:</p>
+			<pre><code>
+// add selection script
+preview.AddComponent&lt;SelectableCharacter&gt;();
+preview.GetComponent&lt;SelectableCharacter&gt;().index = selectionIndex;
+<span style="color: #0000ff;">preview.GetComponent&lt;SelectableCharacter&gt;().manager = this;</span>
+			</code></pre>
+		</details>
+	</li>
+</ol>
+
+<hr />
+
+<h2>Installation</h2>
+<strong>Duplicating Scenes</strong>
+<p>Typically, you create a new scene by duplicating the existing default uMMORPG scene called "World". When using Network Zones, take care of a few things:</p>
+
+<ol>
+	<li>Get rid of all game objects with a "Network Identity" in them (Monsters etc.) as their ID numbers will still reference the original scene. Re-add them from prefabs instead.</li>
+	<li>Make sure to delete the following objects from the scenes hierarchy: Canvas, NetworkManager, Minimap Camera, Event System</li>
+</ol>
+
+<strong>Integration Steps & Core Changes</strong>
+<ol>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Depending on your Mirror version, you have to edit one of the scripts to fix a bug, see here: https://github.com/vis2k/Mirror/pull/541/files</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Install <strong>UCE_AutoRegisterSpawnables</strong> Addon and setup as stated in the Readme.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> In your original NetworkManagerMMO.cs go to ca. line 324 (where it says add selection script in the comment above it) and add this new line below it: <pre><code>preview.GetComponent<SelectableCharacter>().manager = this;</code></pre></li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Add NetworkZone component to NetworkManager once.</li>
+	<li>
+		<span style="color: #800000;"><strong>[Required]</strong></span> Assign public components by dragging NetworkManager's components into it.
+		<ul>
+			<li>In this example Set 'Scene Paths to Spawn' - Size to 3</li>
+			<li>Using the default path as a guide add your scenes including the Scene00_Init for character login, creation and selection.</li>
+			<li>
+				Example:
+				<ul>
+					<li>Element 0 = Scene00_Init (Character Login, Creation, Selection)</li>
+					<li>Element 1 = Scene01 (First Playable Location)</li>
+					<li>Element 2 = Scene02 (Another Playable Location)</li>
+					<li>and so on... if you have more scenes</li>
+				</ul>
+			</li>
+		</ul>
+	</li>
+	<li>
+		<span style="color: #800000;"><strong>[Required]</strong></span> Add DontDestroyOnLoad component only to the following (drag script or click on add component):
+		<ul>
+			<li>Canvas</li>
+			<li>EventSystem</li>
+			<li>MinimapCamera (referenced by the prior two)</li>
+		</ul>
+	</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> From the NetworkZone AddOn, drag the Zone Portal prefab to your scene.</li>
+	<li>
+		<span style="color: #800000;"><strong>[Required]</strong></span> On the portal, change the Scene to the destination scene, in this case Scene01.
+		<ul>
+			<li>Scene01 (Playable Location)</li>
+		</ul>
+	</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Save Scene00_Init.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Select from Scenes, Scene00_Init in the Project Area (Not Hierarchy), Duplicate it via ctrl+d.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Rename the duplicated scene to Scene01 (in this example).</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Go to File->Build Settings and add Scene01 (Drag from Project Area).</li>
+	<li>
+		<span style="color: #800000;"><strong>[Required]</strong></span> Open Scene01 and delete the following from hierarchy:
+		<ul>
+			<li>Canvas</li>
+			<li>EventSystem</li>
+			<li>MinimapCamera</li>
+			<li>NetworkManager</li>
+			<li>Delete ALL Spawnable Prefabs that were copied over from Scene00_Init</li>
+			<li>You can change the scene however you like, just leave in Respawn points (any location)</li>
+			<li>Change the copied Network Zone Portal as shown in the next step.</li>
+		</ul>
+	</li>
+	<li>
+		<span style="color: #800000;"><strong>[Required]</strong></span> Select the Scene01 Network Zone Portal GameObject in scene and in the inspector change the ScenePath to the destination scene, in this case Scene02.
+		<ul>
+			<li>Scene02 (Playable Location)</li>
+		</ul>
+	</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Save Scene01.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Select from Scenes, Scene01 in the Project Area (Not Heirarchy), Duplicate it via ctrl+d.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Rename the duplicated scene to Scene02 (in this example).</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Select the Network Portal in the hierarchy.</li>
+	<li>
+		<span style="color: #800000;"><strong>[Required]</strong></span> Select the Scene02 Network Zone Portal GameObject in scene and in the inspector change the Scene to the destination scene, in this case Scene01 (to return back to scene01).
+		<ul>
+			<li>Scene01 (Playable Location)</li>
+			<li>You can continue on with multiple worlds(scenes) just add and name according. In this case we are just returning to the first playable area.</li>
+		</ul>
+	</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Save Scene02.</li>
+</ol>
+
+<hr />
+
+<h2>Screenshots</h2>
+<p>None.</p>
+<!--<p><img class="alignnone size-full wp-image-3418" src="" alt="" width="560" height="315" /></p>-->
+
+<hr />
+
+<h2>Video</h2>
+<p>None.</p>
+<!--<p><iframe width="560" height="315" src="" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>-->
+
+<hr />
+
+<h2>Extras</h2>
+<ul>
+	<li>Never ever set a portal to return to Character Login, Create and Select Scene in this case Scene00_Init.</li>
+	<li>Chat doesn't work across zones yet. using an irc server is a possible solution.</li>
+	<li>Guild/Party invites do not work across zones yet.</li>
+	<li>Sqlite does allow concurrent access. but if you get errors, consider using mysql.</li>
+	<li>AddOns like UCE Friendship do not work across zones yet.</li>
+</ul>
+
+<hr />
+
+<p>Crowon Studio&copy;2018 - for personal and commercial game projects, not for sharing or re-sale</p>

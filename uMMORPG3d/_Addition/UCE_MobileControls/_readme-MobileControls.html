@@ -1,0 +1,237 @@
+<style>
+	@import "https://fonts.googleapis.com/css?family=Open Sans:regular,semibold,italic,italicsemibold|Inconsolata&amp;v2";
+
+	body {
+		font-family: "Open Sans";
+		margin: 6em 2em 2em 2em;
+	}
+
+		body:before {
+			content: '';
+			position: fixed;
+			top: 2%;
+			right: 3%;
+			height: 256px;
+			width: 256px;
+			background: url(https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowonStudio-Top-1024x1024.png) no-repeat 100% 100%;
+			background-size: contain;
+			z-index: 10;
+			opacity: 0.5;
+		}
+
+	h1, h2, h3, h4 {
+		font-weight: 600;
+	}
+
+	h1 {
+		position: fixed;
+		background: -webkit-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -moz-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -ms-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		background: -o-linear-gradient(top, white 65%, rgba(255,255,255,0));
+		width: 100%;
+		height: 80px;
+		padding: 10px 10px 10px 1em;
+		left: 0;
+		top: 0;
+		margin: 0;
+	}
+
+		h1 img {
+			height: 30px;
+			vertical-align: middle;
+			margin-bottom: 8px;
+		}
+
+	a {
+		color: navy;
+	}
+
+	pre {
+		background: #eee;
+		margin-left: 2em;
+		padding: 5px;
+		border-left: 3px solid #ccc;
+	}
+</style>
+
+<h1>
+	<a href="https://discord.gg/YkMbDHs" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2021/01/discordlogo.png" style="width:48px; height:48px"></a>
+	<a href="https://crowon-studio.com" target="_blank"><img src="https://www.crowon-studio.com/wp-content/uploads/2020/11/CrowMoon.png" style="width:48px; height:48px"></a>
+	Mobile Controls
+</h1>
+
+<table class="wp-block-table is-style-stripes">
+	<tbody>
+		<tr>
+			<td><strong>Version:</strong></td>
+			<td>2021.100</td>
+			<td><strong>Requirements:</strong></td>
+			<td>uMMORPG3d</td>
+			<td><strong>Script Define:</strong></td>
+			<td>_CSMOBILECONTROLS</td>
+		</tr>
+		<tr>
+			<td><strong>Core Changes:</strong></td>
+			<td>Yes</td>
+			<td><strong>Tutorial Video:</strong></td>
+			<td>No</td>
+			<td></td>
+			<td></td>
+		</tr>
+	</tbody>
+</table>
+
+<h2>Description</h2>
+<p>
+	Adds a on-screen joystick and shortcuts as well as a mobile camera and touch controls to your game.
+</p>
+
+<hr />
+
+<h2>Core Changes</h2>
+<p>
+	Some add-ons require changes to the core framework in order to function. This add-on requires the following change(s):
+</p>
+
+<ol>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>UIShortcuts.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>
+quitButton.onClick.SetListener(() => {
+	NetworkManagerMMO.Quit();
+});
+			</code></pre>
+			<p>Modify to match:</p>
+			<pre><code>
+quitButton.onClick.SetListener(() => {
+	NetworkManagerMMO.Quit();
+});
+
+<span style="color: #0000ff;">Utils.InvokeMany(typeof(UIShortcuts), this, "Update_");</span>
+</code></pre>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>Player.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line (Not Required if using UCE Better Tab Target):
+			<pre><code>
+// simple tab targeting
+[Client]
+void TargetNearest()
+{
+	if (Input.GetKeyDown(targetNearestKey))
+	{
+		// find all monsters that are alive, sort by distance
+		GameObject[] objects = GameObject.FindGameObjectsWithTag("Monster");
+		List&lt;Monster> monsters = objects.Select(go => go.GetComponent&lt;Monster>()).Where(m => m.health > 0).ToList();
+		List&lt;Monster> sorted = monsters.OrderBy(m => Vector3.Distance(transform.position, m.transform.position)).ToList();
+
+		// target nearest one
+		if (sorted.Count > 0)
+		{
+			SetIndicatorViaParent(sorted[0].transform);
+			CmdSetTarget(sorted[0].netIdentity);
+		}
+	}
+}
+			</code></pre>
+			<p>Modify to match:</p>
+			<pre><code>
+// simple tab targeting
+[Client]
+void TargetNearest()
+{	
+<span style="color: #0000ff;">
+#if _CSMOBILECONTROLS
+	if (Input.GetKeyDown(targetNearestKey || targetButtonPressed) {
+	targetButtonPressed = false;
+#else
+	if (Input.GetKeyDown(targetNearestKey) {
+#endif
+</span>
+		// find all monsters that are alive, sort by distance
+		GameObject[] objects = GameObject.FindGameObjectsWithTag("Monster");
+		List&lt;Monster> monsters = objects.Select(go => go.GetComponent&lt;Monster>()).Where(m => m.health > 0).ToList();
+		List&lt;Monster> sorted = monsters.OrderBy(m => Vector3.Distance(transform.position, m.transform.position)).ToList();
+
+		// target nearest one
+		if (sorted.Count > 0)
+		{
+			SetIndicatorViaParent(sorted[0].transform);
+			CmdSetTarget(sorted[0].netIdentity);
+		}
+	}
+}
+			</code></pre>
+		</details>
+	</li>
+	<li>
+		<details>
+			<summary>
+				<span style="color: #800000;"><strong>[Required]</strong> </span>Open the following script <strong>Player.cs</strong>. (Click to Expand)
+			</summary>
+			<br />Locate this line:
+			<pre><code>
+float horizontal = Input.GetAxis("Horizontal");
+float vertical = Input.GetAxis("Vertical");
+			</code></pre>
+			<p>Modify to match:</p>
+			<pre><code>
+float horizontal = Input.GetAxis("Horizontal");
+float vertical = Input.GetAxis("Vertical");
+<span style="color: #0000ff;">
+#if _CSMOBILECONTROLS
+	horizontal += MobileControls.joyVirtualAxis.x;
+	vertical += MobileControls.joyVirtualAxis.y;
+#endif</span>
+			</code></pre>
+		</details>
+	</li>
+</ol>
+
+<hr />
+
+<h2>Installation</h2>
+<ol>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Delete the original <strong>CameraMMO.cs</strong> script.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Add all Prefabs from <strong>Prefabs [Drag to Canvas]</strong> to your Canvas.</li>
+	<li><span style="color: #800000;"><strong>[Required]</strong></span> Link all missing scripts on <strong>UCE_UI_MobileControls</strong>.</li>
+</ol>
+
+<hr />
+
+<h2>Screenshots</h2>
+<p>None.</p>
+<!--<p><img class="alignnone size-full wp-image-3418" src="" alt="" width="560" height="315" /></p>-->
+
+<hr />
+
+<h2>Video</h2>
+<p>None.</p>
+<!--<p><iframe width="560" height="315" src="" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></p>-->
+
+<hr />
+
+<h2>Extras</h2>
+<ul>
+	<li>"UCE_UI_MobileControls" will only show up on mobile platforms, tick the "always active" checkbox to have them show up everywhere instead.</li>
+	<li>There are two basic potions that can be linked in the shortcuts, you find them inside the "UCE_UI_MobileControls" prefab to edit.</li>
+	<li>You can use the original skillbar if you want, by deactivating the new mobile skillbar inside the "UCE_UI_MobileControls" prefab. But it's recommended to go with the mobile skillbar instead.</li>
+	<li>If you just want to have camera look with touch - you are done with importing the asset! Drag one finger on your touch enabled device to turn camera, pinch with 2 fingers to zoom and tap to move to position/select entity.</li>
+	<li>If you want a virtual joystick for movement and a virtual button for targeting enemies, simply drag the "MobileControls"* onto your Canvas. By Default the joystick will be placed in the lower left side of the screen, so you might want to get some space there - i.e. you can move the Chat to upper left of screen and HealthMana to lower center. Control the as described above, either while using joystick or not - you can still tap to move.</li>
+	<li>For a better reachability of Skills (like Attack) or item (potion, equipment, etc.) on smaller screen, just drag the "Skillbuttons" prefabs onto your Canvas - be careful that it is above Shortcuts in Hierarchy. The big button in lower right is always the Default attack, the 2 small ones are meant for consumable items, like potions, default is Health Potion and Mana Potion. You can define them to other potion items in Inspector (drag preferred ScriptableItems to slots "Consumable Item 1" & "Consumable Item 2") - the Default Skillbar will autohide on start if Skillbuttons are in your Canvas.</li>
+	<li>Now you might see that the Shortcuts bar is right above the Skillbuttons, to solve this problem you can add a Show and Close Button. Therfore find ButtonClose and ButtonShow Prefabs in the AdvancedMobileControls folder. Then drag ButtonShow directly onto Shortcuts and ButtonClose onto ShortcutsPanel. After that select the Shortcuts and in Inspector you should see 2 free slots: "Show Button Object" -> there you connect the ButtonShow and "Close Button" -> there you connect the ButtonClose. If you know start the game, the Shortcuts get hidden by default and only show up, when you press the new ShowButton (looks like Burger Button) - to close Shortcuts again, press the similar looking button in the Shortcuts panel.</li>
+	<li>Feel free to play around with different layouts of the controls, i.e. you can set the Shortcutspanel to vertical, (find "Grid Layout Group (Script)" in Inspector), there set the Constraint to "Fixed Column Count".</li>
+</ul>
+
+<hr />
+
+<p>Crowon Studio&copy;2018 - for personal and commercial game projects, not for sharing or re-sale</p>
